@@ -18,8 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- *
- * @author g34784
+ * 
+ * @author G34784
  */
 public class FrontController extends HttpServlet {
 
