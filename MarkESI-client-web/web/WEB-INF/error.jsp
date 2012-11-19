@@ -11,7 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Erreur : <%=request.getAttribute("errorType")%></title>
     </head>
-    <body id="error" >
+    <body id="error">
         <h1>Une erreur est survenue : <%=request.getAttribute("errorType")%></h1>
         <p>
             <%=request.getAttribute("error")%>
