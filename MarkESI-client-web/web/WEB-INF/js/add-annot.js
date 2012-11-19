@@ -112,27 +112,12 @@ $(document).ready(function() {
         $('.close_selection:last input[name=close]').click(function() {
             supprimerSelection($(this), true);
         });
-        
-        //Rajoute pour la nouvelle annotation la fonctionnalité de mise en évidence
-        $('.selection:last').hover(function() {
-            putInFront($(this).find('input[name=id_sel]').val());
-        }, function() {
-            putInBack($(this).find('input[name=id_sel]').val());
-        });
 
         //on met en évidence la sélection dans le texte
         addClass(curr_annot, curr_id_sel, curr_selection, 'cur_sel');
 
         //Pour finir, on incrémente l'id de la sélection courante
         curr_id_sel++;
-    }
-    
-    function putInFront(id_sel) {
-        $('#annot_' + curr_annot + '_sel_' + id_sel).addClass('cur_sel_hover');
-    }
-    
-    function putInBack(id_sel) {
-        $('#annot_' + curr_annot + '_sel_' + id_sel).removeClass('cur_sel_hover');
     }
 
     function aucuneSelection() {

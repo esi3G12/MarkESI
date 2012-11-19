@@ -1,7 +1,3 @@
-$(document).ready( function() {
-    prettyPrint();
-});
-
 function addClass(curr_annot, curr_id_sel, selection, class_to_add) {
     var div_content = $('#code #content'); //on met à jour div_content
     var text = div_content.html();

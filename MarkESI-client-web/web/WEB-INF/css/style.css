@@ -107,17 +107,13 @@ p {
     position: relative;
 }
 
-#file #code #under .cur_sel {
+#file #code .cur_sel {
     background: #FAE0A5;
     border: none;
     padding: 2px 0 0.5px 0;
 }
 
-#file #code #under .cur_sel_hover {
-    border: 1px solid tomato;
-}
-
-#file #code #under .sel {
+#file #code .sel {
     background: #FAFAA5;
     border: 1px dashed orange;
 }
