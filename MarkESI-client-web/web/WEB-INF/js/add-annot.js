@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var text_div = $('#code pre');
+    var text_div = $('#code #content');
     var selections_div = $('#selections');
     var annot_text = $('#annotation');
     var button_add_annot = $('#add_annot');
@@ -15,7 +15,8 @@ $(document).ready(function() {
     };
 
     function majPanel() {
-        button_add_annot.text('Ajouter l\'annotation n°' + (curr_annot + 1));
+        button_add_annot.text('Ajouter l\'annotation ' + (curr_annot + 1));
+        reset();
     }
 
     majPanel();
@@ -71,20 +72,25 @@ $(document).ready(function() {
 
     function newSelection() {
         var sel = text_div.selection();
+        
         if (sel.start != sel.end) {
             //une sélection a bien été effectuée
-            curr_selection.text = text_div.text().substring(sel.start, sel.end);
+            curr_selection.text = escapeHTML(text_div.text().substring(sel.start, sel.end));
             curr_selection.start = sel.start;
             curr_selection.end = sel.end;
             curr_selection.length = sel.end - sel.start;
             text_div.selection(0, 0); //désélectionne la sélection courante
             if (!selectionEstCorrecte(curr_selection)) {
                 //traitement en cas d'erreur
-                notification('Cette sélection n\'est pas valide !', type_message.ERROR);
+                notification('Cette s&eacute;lection n\'est pas valide !', type_message.ERROR);
             } else {
                 ajouteSelection();
             }
         }
+    }
+    
+    function escapeHTML(string) {
+        return string.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
     function ajouteSelection() {
@@ -106,12 +112,27 @@ $(document).ready(function() {
         $('.close_selection:last input[name=close]').click(function() {
             supprimerSelection($(this), true);
         });
+        
+        //Rajoute pour la nouvelle annotation la fonctionnalité de mise en évidence
+        $('.selection:last').hover(function() {
+            putInFront($(this).find('input[name=id_sel]').val());
+        }, function() {
+            putInBack($(this).find('input[name=id_sel]').val());
+        });
 
         //on met en évidence la sélection dans le texte
-        addClass(text_div, curr_annot, curr_id_sel, curr_selection, 'cur_sel');
+        addClass(curr_annot, curr_id_sel, curr_selection, 'cur_sel');
 
         //Pour finir, on incrémente l'id de la sélection courante
         curr_id_sel++;
+    }
+    
+    function putInFront(id_sel) {
+        $('#annot_' + curr_annot + '_sel_' + id_sel).addClass('cur_sel_hover');
+    }
+    
+    function putInBack(id_sel) {
+        $('#annot_' + curr_annot + '_sel_' + id_sel).removeClass('cur_sel_hover');
     }
 
     function aucuneSelection() {
@@ -138,12 +159,12 @@ $(document).ready(function() {
 
     function ajouterAnnotation() {
         if ($('#annotation').val() === '') {
-            notification('Le texte de l\'annotation ne peut pas être vide !', type_message.ERROR);
+            notification('Le texte de l\'annotation ne peut pas &ecirc;tre vide !', type_message.ERROR);
             return;
         }
 
         if (aucuneSelection()) {
-            notification('Il faut avoir au moins une sélection à annoter !', type_message.ERROR);
+            notification('Il faut avoir au moins une s&eacute;lection à annoter !', type_message.ERROR);
             return;
         }
 
@@ -151,11 +172,11 @@ $(document).ready(function() {
         curr_annot++; //on passe à l'annotation suivante
         curr_selection.annotation = curr_annot; //les séléctions sont maintenants destinées à l'annotation suivante
         $('.cur_sel').removeClass().addClass('sel').addClass('sel_of_annot_' + curr_annot);
+        //on ajoute la class 'sel' aux sélections et une autre class pour avoir 
+        //toutes les sélections d'une annotations d'un coup grâce à $('.sel_of_annot' + num_annot)
         majPanel();
 
-        notification('Annotation n° ' + curr_annot + ' ajoutée !', type_message.INFO);
-
-        reset();
+        notification('Annotation ' + curr_annot + ' ajout&eacute;e !', type_message.INFO);
     }
 
     function setNoSelection() {
@@ -180,15 +201,10 @@ $(document).ready(function() {
         return sel_div;
     }
 
-    function htmlentities(html) {
-        /*html = html.replace(/&/g, "&amp;");
-        html = html.replace(/</g, "&lt;");
-        html = html.replace(/>/g, "&gt;");
-        return html;*/
-        return escape(html);
-    }
-
     function selectionEstCorrecte(curr_selection) {
+        if (curr_selection.text.match(/^ +$/))
+            return false;
+        
         selection_est_englobante = false;
         var error = false;
         var i = 0;

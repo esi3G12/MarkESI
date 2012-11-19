@@ -65,10 +65,7 @@ public class FrontController extends HttpServlet {
             throws FileNotFoundException, IOException {
         String fileName = request.getParameter("fileName");
         
-        fileName = fileName.replace("\\", "/");
-        String[] pathParts = fileName.split("/");
-        //we take the last part = just the name of the file
-        String fileShortName = pathParts[pathParts.length-1];
+        String fileShortName = getShortFileName(fileName);
         
         request.setAttribute("fileName", fileShortName);
         request.setAttribute("title", "Fichier : " + fileShortName);
@@ -150,5 +147,12 @@ public class FrontController extends HttpServlet {
             viewsList.set(i, PREFIX + viewsList.get(i));
         }
         request.setAttribute("views", viewsList);
+    }
+
+    private String getShortFileName(String fileName) {
+        String replace = fileName.replace("\\", "/");
+        String[] pathParts = replace.split("/");
+        //we take the last part = just the name of the file
+        return pathParts[pathParts.length-1];
     }
 }

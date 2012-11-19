@@ -1,5 +1,9 @@
-function addClass(div_content, curr_annot, curr_id_sel, selection, class_to_add) {
-    div_content = $('#code pre'); //on met à jour text_div
+$(document).ready( function() {
+    prettyPrint();
+});
+
+function addClass(curr_annot, curr_id_sel, selection, class_to_add) {
+    var div_content = $('#code #content'); //on met à jour div_content
     var text = div_content.html();
 
     //on trouve le vrai début de la sélection dans le code html
@@ -23,8 +27,11 @@ function findIndex(index, text) {
     var i = 0;
     var nb_char_balises = 0;
     var trouve = false;
+
     while (!trouve && i < text.length) {
-        if (text.charAt(i) == '&') {
+        if ((i - nb_char_balises) == index) {
+            trouve = true;
+        } else if (text.charAt(i) == '&') {
             //c'est un seul caractère transformé en non html
             while (text.charAt(i) != ';') {
                 //on le passe complètement en le comptant comme non caractère
@@ -42,11 +49,7 @@ function findIndex(index, text) {
             i++;
             nb_char_balises++;
         } else {
-            if ((i - nb_char_balises) == index) {
-                trouve = true;
-            } else {
-                i++;
-            }
+            i++;
         }
     }
 
