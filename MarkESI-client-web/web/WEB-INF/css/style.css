@@ -20,6 +20,22 @@ pre {
     white-space: pre;
 }
 
+.annotation {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 5px;
+}
+
+#sels {
+    margin-top: 10px;
+}
+
+.annotation .date {
+    color: #777;
+    text-align: right;
+    font-size: 12px;
+}
+
 .selection {
     padding: 3px;
     border: 1px solid #FAE0A5;

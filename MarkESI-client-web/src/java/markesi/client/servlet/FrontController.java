@@ -47,6 +47,8 @@ public class FrontController extends HttpServlet {
                     viewFile(request, response);
                 } else if (action.equals("manageFile")) {
                     manageFile(request, response);
+                } else if (action.equals("exploreFile")) {
+                    exploreFile(request, response);
                 }
             } else {
                 //No action = just index page
@@ -94,6 +96,14 @@ public class FrontController extends HttpServlet {
         
         request.setAttribute("title", "Ajout d'annotation");
         List<String> viewsList = Arrays.asList("file-view.jsp", "add-annotation-view.jsp");
+        setViewsAttribute(request, viewsList);
+    }
+    
+    private void exploreFile(HttpServletRequest request, HttpServletResponse response) 
+            throws FileNotFoundException, IOException {
+        viewFile(request, response);
+        request.setAttribute("title", "Vue des annontations");
+        List<String> viewsList = Arrays.asList("file-view.jsp", "annotation-view.jsp");
         setViewsAttribute(request, viewsList);
     }
 
