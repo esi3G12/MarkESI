@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
+import markesi.business.AnnotationEJB;
 import markesi.business.SubFileEJB;
+import markesi.entity.Annotation;
 import markesi.entity.SubFile;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,54 +26,96 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * 
+ *
  * @author Auguste
  */
 public class SubFileEJBTest {
-    
+
     private static EJBContainer container;
-    
-    
     private static SubFileEJB subFileEJB;
-            
+    private static AnnotationEJB AnnotationEJB;
+
     public SubFileEJBTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
         container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
         try {
             subFileEJB = (SubFileEJB) container.getContext().lookup(
                     "java:global/classes/SubFileEJB");
+            AnnotationEJB = (AnnotationEJB) container.getContext().lookup(
+                    "java:global/classes/AnnotationEJB");
         } catch (NamingException ex) {
             Logger.getLogger(SubmissionEJBTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
         container.close();
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
-    
+
     @Test
-    public void addSubFile() throws FileNotFoundException, IOException {        
+    public void addSubFile() throws FileNotFoundException, IOException {
         new File("C:\\UserLocal\\FileTest.java").createNewFile();
         File file = new File("C:\\UserLocal\\FileTest.java");
         FileOutputStream os = new FileOutputStream(file);
         os.write(new String("ceci est un fichier de test").getBytes());
         InputStream input = new FileInputStream(file);
-        
-        SubFile subFile = subFileEJB.add(input, "testFile.java", "C:\\UserLocal\\");        
+
+        SubFile subFile = subFileEJB.add(input, "testFile.java", "C:\\UserLocal\\");
         assertEquals(subFile, subFileEJB.getSubFileById(subFile.getId()));
         assertNull(subFileEJB.getSubFileById(13l));
     }
-    
+
+    @Test
+    public void attachAnnotation() {
+        try {
+
+            FileOutputStream os = null;
+            //on commence par creer un fichier
+            new File("C:\\UserLocal\\FileTest.java").createNewFile();
+            File file = new File("C:\\UserLocal\\FileTest.java");
+            os = new FileOutputStream(file);
+            os.write(new String("ceci est un fichier de test").getBytes());
+            InputStream input = new FileInputStream(file);
+            SubFile subFile = subFileEJB.add(input, "testFile.java", "C:\\UserLocal\\");
+            SubFile subFile2 = subFileEJB.add(input, "testFile.java", "C:\\UserLocal\\");
+
+            assertNotNull(subFile.getFileName());
+            System.out.println("\n\n\n\n\n\n\n\n\n" + subFile.getFileName());
+            os.close();
+            Annotation annotationReturned = AnnotationEJB.create("test");
+
+            System.out.println("id subfile 1: " + subFile.getId());
+            System.out.println("id subfile 2: " + subFile2.getId());
+
+            System.out.println("id annotation: " + annotationReturned.getId());
+
+            subFileEJB.setAnnotation(subFile2, annotationReturned);
+            System.out.println("annotation ajoutee" + "\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+            //on doit réattacher le tout... 
+            subFile2 = subFileEJB.getSubFileById(subFile2.getId());
+            annotationReturned = AnnotationEJB.findById(annotationReturned.getId());
+
+            assertEquals(1, subFile2.getAnnotationCollection().size());
+
+            assertNotNull(annotationReturned.getSubFile());
+        } catch (IOException ex) {
+            System.out.println("ERREUR:" + ex.getMessage());
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+            assertTrue(false);
+        }
+
+    }
 }
