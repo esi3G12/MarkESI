@@ -10,10 +10,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import javax.ejb.EJB;
+import javax.ejb.embeddable.EJBContainer;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import markesi.entity.SubFile;
+import markesi.entity.Submission;
+import markesi.facade.FacadeAllRemote;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -24,6 +30,12 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class FrontController extends HttpServlet {
 
     private static final String PREFIX = "views/";
+    public static final String CHEMIN = "chemin";
+    public static final int TAILLE_TAMPON = 10240;
+    public static final String CHAMP_FICHIER = "fichier";
+    @EJB
+    private FacadeAllRemote facade;
+    private static EJBContainer container;
 
     /**
      * Processes requests for both HTTP
@@ -47,6 +59,8 @@ public class FrontController extends HttpServlet {
                     viewFile(request, response);
                 } else if (action.equals("manageFile")) {
                     manageFile(request, response);
+                } else if (action.equals("upload")){
+                    doUp(request, response);
                 }
             } else {
                 //No action = just index page
@@ -64,18 +78,18 @@ public class FrontController extends HttpServlet {
     private void viewFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         String fileName = request.getParameter("fileName");
-        
+
         String fileShortName = getShortFileName(fileName);
-        
+
         request.setAttribute("fileName", fileShortName);
         request.setAttribute("title", "Fichier : " + fileShortName);
-        
+
         File file = new File(fileName);
 
         if (file.exists()) {
             FileInputStream myStream = new FileInputStream(fileName);
             String myString = IOUtils.toString(myStream);
-            
+
             request.setAttribute("file", StringEscapeUtils.escapeHtml(myString));
 
             List<String> viewsList = Arrays.asList("file-view.jsp");
@@ -85,10 +99,10 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    private void manageFile(HttpServletRequest request, HttpServletResponse response) 
+    private void manageFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         viewFile(request, response);
-        
+
         request.setAttribute("title", "Ajout d'annotation");
         List<String> viewsList = Arrays.asList("file-view.jsp", "add-annotation-view.jsp");
         setViewsAttribute(request, viewsList);
@@ -153,6 +167,42 @@ public class FrontController extends HttpServlet {
         String replace = fileName.replace("\\", "/");
         String[] pathParts = replace.split("/");
         //we take the last part = just the name of the file
-        return pathParts[pathParts.length-1];
+        return pathParts[pathParts.length - 1];
+    }
+
+    public void doUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String chemin = this.getServletConfig().getInitParameter(CHEMIN);
+
+        Part part = request.getPart("fichier");
+
+        String nomFichier = getNomFichier(part);
+
+        if (nomFichier != null && !nomFichier.isEmpty()) {
+            String nomChamp = part.getName();
+
+            nomFichier = nomFichier.substring(nomFichier.lastIndexOf('/') + 1)
+                    .substring(nomFichier.lastIndexOf('\\') + 1);
+
+            Submission sub = facade.addSubmission("subtest");
+            
+            SubFile subfile = facade.saveSubFile(IOUtils.toString(part.getInputStream()), nomFichier, chemin);
+            facade.attachSubFileToSubmission(sub, subfile);
+
+            request.setAttribute(nomChamp, nomFichier);
+        }
+    }
+
+    private static String getNomFichier(Part part) {
+        /* Boucle sur chacun des paramètres de l'en-tête "content-disposition". */
+        for (String contentDisposition : part.getHeader("content-disposition").split(";")) {
+            /* Recherche de l'éventuelle présence du paramètre "filename". */
+            if (contentDisposition.trim().startsWith("filename")) {
+                /* Si "filename" est présent, alors renvoi de sa valeur, c'est-à-dire du nom de fichier. */
+                return contentDisposition.substring(contentDisposition.indexOf('=') + 1);
+            }
+        }
+        /* Et pour terminer, si rien n'a été trouvé... */
+        return null;
     }
 }

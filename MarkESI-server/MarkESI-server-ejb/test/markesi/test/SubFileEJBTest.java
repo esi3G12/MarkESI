@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+
 /**
  * 
  * @author Auguste
@@ -67,9 +68,8 @@ public class SubFileEJBTest {
         File file = new File("C:\\UserLocal\\FileTest.java");
         FileOutputStream os = new FileOutputStream(file);
         os.write(new String("ceci est un fichier de test").getBytes());
-        InputStream input = new FileInputStream(file);
         
-        SubFile subFile = subFileEJB.add(input, "testFile.java", "C:\\UserLocal\\");        
+        SubFile subFile = subFileEJB.add("ceci est un fichier de test", "testFile.java", "C:\\UserLocal\\");        
         assertEquals(subFile, subFileEJB.getSubFileById(subFile.getId()));
         assertNull(subFileEJB.getSubFileById(13l));
     }

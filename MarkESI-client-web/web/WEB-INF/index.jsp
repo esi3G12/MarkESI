@@ -12,7 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title><%=request.getAttribute("title")%></title>
         <style><%@include file="css/style.css"%>
-            
+
             <%@include file="css/notification.css"%></style>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript">
@@ -23,6 +23,22 @@
         </script>
     </head>
     <body>
+        <form action="?action=upload" method="post" enctype="multipart/form-data">
+              <fieldset>
+                <legend>Envoi de fichier</legend>
+
+                <label for="description">Description du fichier</label>
+                <input type="text" id="description" name="description" value="" />
+                <br />
+
+                <label for="fichier">Emplacement du fichier <span class="requis">*</span></label>
+                <input type="file" id="fichier" name="fichier" />
+                <br />
+                <input type="hidden" name="action" id="action" value="upload"/>
+                <input type="submit" value="Envoyer" class="sansLabel" />
+                <br />                
+            </fieldset>
+        </form>
 
         <%
             Collection<String> views = (Collection<String>) request.getAttribute("views");

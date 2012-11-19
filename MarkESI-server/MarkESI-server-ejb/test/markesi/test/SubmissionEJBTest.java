@@ -79,9 +79,7 @@ public class SubmissionEJBTest {
         File file = new File("C:\\UserLocal\\FileTest.java");
         FileOutputStream os = new FileOutputStream(file);
         os.write(new String("ceci est un fichier de test").getBytes());
-        InputStream input = new FileInputStream(file);
-        
-        SubFile subFile = subfileEJB.add(input, "testFile.java", "C:\\UserLocal\\");
+        SubFile subFile = subfileEJB.add("ceci est un fichier de test", "testFile.java", "C:\\UserLocal\\");
         submissionEJB.addSubFile(submission, subFile);
         ArrayList<SubFile> l = new ArrayList<SubFile>(submission.getSubFiles());
         assertEquals(subFile, l.get(0));

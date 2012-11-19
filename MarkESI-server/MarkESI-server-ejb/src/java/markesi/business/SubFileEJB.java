@@ -6,6 +6,7 @@ package markesi.business;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,12 +37,12 @@ public class SubFileEJB {
         return em.find(SubFile.class, id);
     }
 
-    public SubFile add(InputStream content, String fileName, String path) {
+    public SubFile add(String content, String fileName, String path) {
         SubFile subFile = new SubFile();
         subFile.setDate(new Date());
         subFile.setFileName(fileName);
         subFile.setFilePath(path);
-        save(content, path, fileName);
+        save(new ByteArrayInputStream(content.getBytes()), path, fileName);
         em.persist(subFile);
         return subFile;
     }
