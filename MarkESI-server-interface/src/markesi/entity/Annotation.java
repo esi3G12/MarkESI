@@ -5,13 +5,19 @@
 package markesi.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,6 +27,7 @@ import javax.persistence.TemporalType;
  * @author LSV
  */
 @Entity
+@Table(name = "ANNOTATION")
 public class Annotation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,18 +35,24 @@ public class Annotation implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "Annotation")
     @TableGenerator(name = "Annotation", allocationSize = 1)
     private Long id;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "annotation")
-    //private Collection<Interval> intervalCollection;
+    
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "annotation")
+    private Collection<Interval> intervalCollection;
+    
     @Basic(optional = false)
     @Column(name = "TEXT")
     private String text;
-    @Column(name = "DATE")
+    @Column(name = "DATEANNOT")
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private Date dateAnnot;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "SUBFILE", referencedColumnName = "ID")
+    private SubFile subfile;
+    
+    
 
-    //@JoinColumn(name = "IDFILE", referencedColumnName = "ID")
-    //@ManyToOne(optional = false)
-    //private File file;
     public Long getId() {
         return id;
     }
@@ -49,11 +62,11 @@ public class Annotation implements Serializable {
     }
 
     public Date getDate() {
-        return date;
+        return dateAnnot;
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.dateAnnot = date;
     }
 
     public String getText() {
@@ -64,22 +77,26 @@ public class Annotation implements Serializable {
         this.text = text;
     }
 
-    /**   public Collection<Interval> getIntervalCollection() {
-    return intervalCollection;
+    public Collection<Interval> getIntervalCollection() {
+        return intervalCollection;
     }
-    
+
     public void setIntervalCollection(Collection<Interval> intervalCollection) {
-    this.intervalCollection = intervalCollection;
+        this.intervalCollection = intervalCollection;
     }
-     * */
-    /** public void setFile(File file) {
-    this.file = file;
+
+    public void addInterval(Interval toAdd) {
+        this.intervalCollection.add(toAdd);
     }
-    
-    public File getFile() {
-    return this.file;
+
+    public void setSubFile(SubFile subfile) {
+        this.subfile = subfile;
     }
-     * */
+
+    public SubFile getSubFile() {
+        return this.subfile;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
