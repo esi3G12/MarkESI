@@ -129,4 +129,51 @@ public class AnnotationEJBTest {
         assertNull(AnnotationEJB.findById(annotationReturned.getId()));
     }
 
+    @Test
+    public void addIntervalSimilaires() {
+        Collection<Interval> intervals = new ArrayList<Interval>();
+        Interval inter = new Interval();
+        Interval inter2 = new Interval();
+        inter.setBegin(1);
+        inter.setEnd(5);
+        inter2.setBegin(1);
+        inter2.setEnd(5);
+        intervals.add(inter);
+        intervals.add(inter2);
+
+        int i = 0;
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        for (Interval interval : annotationReturned.getIntervalCollection()) {
+            if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
+                i++;
+            }
+
+        }
+        //on ne devrait pas pouvoir ajouter deux intervals égaux dans une meme annotation
+        assertEquals(1, annotationReturned.getIntervalCollection().size());
+    }
+
+    @Test
+    public void addIntervalChevauche() {
+        Collection<Interval> intervals = new ArrayList<Interval>();
+        Interval inter = new Interval();
+        Interval inter2 = new Interval();
+        inter.setBegin(1);
+        inter.setEnd(5);
+        inter2.setBegin(3);
+        inter2.setEnd(8);
+        intervals.add(inter);
+        intervals.add(inter2);
+
+        int i = 0;
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        for (Interval interval : annotationReturned.getIntervalCollection()) {
+            if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
+                i++;
+            }
+
+        }
+        //on ne devrait pas pouvoir ajouter des intervals qui se chevauchent
+        assertEquals(1, annotationReturned.getIntervalCollection().size());
+    }
 }

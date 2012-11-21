@@ -50,8 +50,17 @@ public class AnnotationEJB {
 
     public void addIntervals(Long idAnnotation, Collection<Interval> intervalToAdd) {
         Annotation annot = findById(idAnnotation);
+
+        //on doit vérifier que chaque interval ne chevauche aucun autre...
         for (Interval toAdd : intervalToAdd) {
-            annot.addInterval(toAdd);
+            int nbAnnot = em.createNamedQuery("Interval.intervalOverlap")
+                    .setParameter("end", toAdd.getEnd())
+                    .setParameter("begin", toAdd.getBegin())
+                    .setParameter("id", idAnnotation)
+                    .getMaxResults();
+            if (nbAnnot == 0) {
+                annot.addInterval(toAdd);
+            }
         }
         em.persist(annot);
     }

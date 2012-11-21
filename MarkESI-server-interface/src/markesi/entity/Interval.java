@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -22,12 +23,21 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "INTERVAL")
+//cette query permet de vérifier qu'un interval ne chevauche aucun autre interval
+//sur une même annotation. Si elle renvoit 0, on peut valider l'annotation.
+//Si elle renvoit autre 1, on ne peut pas (a priori elle ne devrait jamais renvoyer 2...)
+@NamedQuery(name="Interval.intervalOverlap", query="SELECT inter FROM Interval inter "
+                                          + " WHERE (:end BETWEEN inter.endPos AND inter.beginPos)"
+                                          + " OR (:begin BETWEEN inter.endPos AND inter.beginPos)"
+                                          + "AND inter.id = :id") 
 public class Interval implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
+
+    
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "Interval")
     @TableGenerator(name = "Interval", allocationSize = 1)
+    @Id
     private Long id;
     @Basic(optional = false)
     @Column(name = "beginPos")
