@@ -18,8 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- *
- * @author g34784
+ * 
+ * @author G34784
  */
 public class FrontController extends HttpServlet {
 
@@ -47,6 +47,8 @@ public class FrontController extends HttpServlet {
                     viewFile(request, response);
                 } else if (action.equals("manageFile")) {
                     manageFile(request, response);
+                } else if (action.equals("exploreFile")) {
+                    exploreFile(request, response);
                 }
             } else {
                 //No action = just index page
@@ -65,10 +67,7 @@ public class FrontController extends HttpServlet {
             throws FileNotFoundException, IOException {
         String fileName = request.getParameter("fileName");
         
-        fileName = fileName.replace("\\", "/");
-        String[] pathParts = fileName.split("/");
-        //we take the last part = just the name of the file
-        String fileShortName = pathParts[pathParts.length-1];
+        String fileShortName = getShortFileName(fileName);
         
         request.setAttribute("fileName", fileShortName);
         request.setAttribute("title", "Fichier : " + fileShortName);
@@ -94,6 +93,14 @@ public class FrontController extends HttpServlet {
         
         request.setAttribute("title", "Ajout d'annotation");
         List<String> viewsList = Arrays.asList("file-view.jsp", "add-annotation-view.jsp");
+        setViewsAttribute(request, viewsList);
+    }
+    
+    private void exploreFile(HttpServletRequest request, HttpServletResponse response) 
+            throws FileNotFoundException, IOException {
+        viewFile(request, response);
+        request.setAttribute("title", "Vue des annontations");
+        List<String> viewsList = Arrays.asList("file-view.jsp", "annotation-view.jsp");
         setViewsAttribute(request, viewsList);
     }
 
@@ -150,5 +157,12 @@ public class FrontController extends HttpServlet {
             viewsList.set(i, PREFIX + viewsList.get(i));
         }
         request.setAttribute("views", viewsList);
+    }
+
+    private String getShortFileName(String fileName) {
+        String replace = fileName.replace("\\", "/");
+        String[] pathParts = replace.split("/");
+        //we take the last part = just the name of the file
+        return pathParts[pathParts.length-1];
     }
 }

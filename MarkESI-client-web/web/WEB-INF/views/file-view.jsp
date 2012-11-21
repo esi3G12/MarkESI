@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Scanner"%>
 <%
     String file = (String) request.getAttribute("file");
@@ -23,6 +24,8 @@
         </tr>
     </table>
 </div>
+
+</script>
 <script type="text/javascript">
     <%@include file="../js/file.js"%>
 </script>
