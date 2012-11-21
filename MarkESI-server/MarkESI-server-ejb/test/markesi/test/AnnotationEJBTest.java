@@ -115,7 +115,7 @@ public class AnnotationEJBTest {
             //les intervals ont bien Ã©tÃ© sauvÃ© (ID!=0)
             assertFalse(interval.getId() == 0);
         }
-        //on a bien un seul interval = a inter (pas deux)
+        //on a bien un seul interval égal à inter (pas deux)
         assertEquals(1, i);
     }
 
