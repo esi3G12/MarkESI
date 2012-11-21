@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <div id="panel" class="big_div">
     <h2>Annotations</h2>
     <div class="padding">
@@ -5,9 +6,9 @@
             Ajouter une annotation :<br/>
             <textarea id="annotation"></textarea>
             <hr/>
-            Aux sélections suivantes :<br/>
+            Aux sÃ©lections suivantes :<br/>
             <div id="selections">
-                <div id="no_selection">Aucune sélection...</div>
+                <div id="no_selection">Aucune sÃ©lection...</div>
             </div>
             <hr/>
             <div class="align_right">
