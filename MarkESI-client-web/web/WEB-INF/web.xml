@@ -4,9 +4,17 @@
         <servlet-name>FrontController</servlet-name>
         <servlet-class>markesi.client.servlet.FrontController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>JsonController</servlet-name>
+        <servlet-class>markesi.client.servlet.JsonController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>FrontController</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>JsonController</servlet-name>
+        <url-pattern>/json</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

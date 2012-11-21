@@ -48,9 +48,14 @@ $(document).ready(function() {
         annotations_div.append(div);
     }
     
-    $.getJSON("newjson.json",
+    function getParameter (name)
+    {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+    }
+    
+    $.getJSON("/MarkESI-client-web/json&fileName=" + getParameter("fileName"),
         function(data){
-          alert("grge");
+          console.log(data);
         }
     );
     

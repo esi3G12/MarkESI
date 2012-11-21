@@ -149,7 +149,7 @@ public class FrontController extends HttpServlet {
     }// </editor-fold>
 
     private void indexPage(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("title", "Accueil");
+        request.setAttribute("title", "Acceuil");
         List<String> viewsList = Arrays.asList("menu-view.jsp");
         setViewsAttribute(request, viewsList);
     }
