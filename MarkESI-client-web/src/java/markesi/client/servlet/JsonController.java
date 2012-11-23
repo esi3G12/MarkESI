@@ -6,12 +6,15 @@ package markesi.client.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,8 +36,8 @@ public class JsonController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action.equals("fileName")) {
+        String fileName = request.getParameter("fileName");
+        if (fileName != null) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             PrintWriter writer = null;
@@ -42,7 +45,15 @@ public class JsonController extends HttpServlet {
                 writer = response.getWriter();
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("test", "hello");
+                    JSONArray annots = new JSONArray();
+                    Collection<JSONObject> sels = new ArrayList<JSONObject>();
+                    sels.add(jsonSelection(10, 15, 5));
+                    sels.add(jsonSelection(20, 21, 1));
+                    sels.add(jsonSelection(45, 55, 10));
+                    sels.add(jsonSelection(68, 85, 17));     
+                    annots.put(jsonAnnotation("text", "date", sels));
+                    json.put("annotations", annots);
+
                 } catch (JSONException ex) {
                     Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -51,6 +62,23 @@ public class JsonController extends HttpServlet {
                 writer.close();
             }
         }
+    }
+
+    public JSONObject jsonAnnotation (String text, String date, Collection<JSONObject> sels) 
+            throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("text", text);
+        obj.put("date", date);
+        obj.put("selections", sels);
+        return obj;
+    }
+
+    public JSONObject jsonSelection (int start, int end, int length) throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("start", start);
+        obj.put("end", end);
+        obj.put("length", length);
+        return obj;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
