@@ -84,6 +84,7 @@ public class Annotation implements Serializable {
         if (!isOverlaping(toAdd)) {
             this.intervalCollection.add(toAdd);
         }else{
+            System.out.println("Overlap détecté, exception lancée");
             throw new IntervalOverlapException("L'ajout de cet interval aurait créé un overlaping");
         }
     }
