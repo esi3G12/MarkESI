@@ -141,13 +141,18 @@ public class JsonController extends HttpServlet {
     }
 
     private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
         String selectionsStr = request.getParameter("selections");
+        
+        if (selectionsStr == null || selectionsStr.equals("")) {
+            response.getWriter().write("error");
+            return;
+        }
+        
         // enlève les [] au début et à la fin :
         selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
-        response.setCharacterEncoding("UTF-8");
         try {
             JSONObject selections = new JSONObject(selectionsStr);
-            Logger.getLogger("JsonController").log(Level.INFO, null, selections.toString());
             response.getWriter().write("success");
             //TODO change this return for error
         } catch (JSONException ex) {

@@ -151,9 +151,10 @@ $(document).ready(function() {
 
         //ajout de l'annotation via le FrontController
         $.post("/MarkESI-client-web/json?action=post", {
-            'selections' : selections
+            "selections" : JSON.stringify(selections)
         },
         function(data) {
+            //TODO data = success OR data = error
             curr_annot++; //on passe à l'annotation suivante
             curr_selection.annotation = curr_annot; //les séléctions sont maintenants destinées à l'annotation suivante
             $('.cur_sel').removeClass().addClass('sel').addClass('sel_of_annot_' + curr_annot);
@@ -162,7 +163,7 @@ $(document).ready(function() {
             majPanel();
 
             notification('Annotation ' + curr_annot + ' ajout&eacute;e !', type_message.INFO);
-        }, "json");
+        }, "text");
     }
 
     function setNoSelection() {
