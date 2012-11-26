@@ -76,14 +76,18 @@ public class Annotation implements Serializable {
         return intervalCollection;
     }
 
-    public void setIntervalCollection(Collection<Interval> intervalCollection) {
-        this.intervalCollection = intervalCollection;
-    }
 
+    /*
+     * inutile, il faut utiliser addInterval pour vérifier qu'il n'y a pas d'overlap
+     * public void setIntervalCollection(Collection<Interval> intervalCollection) {
+     this.intervalCollection = intervalCollection;
+     }
+     */
+    
     public void addInterval(Interval toAdd) throws IntervalOverlapException {
         if (!isOverlaping(toAdd)) {
             this.intervalCollection.add(toAdd);
-        }else{
+        } else {
             System.out.println("Overlap détecté, exception lancée");
             throw new IntervalOverlapException("L'ajout de cet interval aurait créé un overlaping");
         }
