@@ -92,6 +92,7 @@ public class AnnotationEJBTest {
         Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
         //on a bien une collection de taille2
         assertEquals(2, annotationReturned.getIntervalCollection().size());
+
     }
 
     @Test
@@ -107,7 +108,7 @@ public class AnnotationEJBTest {
         intervals.add(inter2);
 
         int i = 0;
-        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test2", intervals);
         for (Interval interval : annotationReturned.getIntervalCollection()) {
             if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
                 i++;
@@ -117,6 +118,7 @@ public class AnnotationEJBTest {
         }
         //on a bien un seul interval égal à inter (pas deux)
         assertEquals(1, i);
+
     }
 
     @Test
@@ -141,16 +143,25 @@ public class AnnotationEJBTest {
         intervals.add(inter);
         intervals.add(inter2);
 
-        int i = 0;
+        System.out.println("Premier ajout:");
         Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
-        for (Interval interval : annotationReturned.getIntervalCollection()) {
-            if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
-                i++;
-            }
 
-        }
+        Collection<Interval> intervals2 = new ArrayList<Interval>();
+        Interval inter3 = new Interval();
+        Interval inter4 = new Interval();
+        inter3.setBegin(1);
+        inter3.setEnd(5);
+        inter4.setBegin(1);
+        inter4.setEnd(5);
+        intervals.add(inter3);
+        intervals.add(inter4);
+
+        System.out.println("deuxieme ajout:");
+        AnnotationEJB.addIntervals(annotationReturned.getId(), intervals2);
+
         //on ne devrait pas pouvoir ajouter deux intervals égaux dans une meme annotation
         assertEquals(1, annotationReturned.getIntervalCollection().size());
+
     }
 
     @Test

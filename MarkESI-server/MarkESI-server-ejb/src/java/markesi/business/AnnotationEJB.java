@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import markesi.entity.SubFile;
@@ -50,18 +51,19 @@ public class AnnotationEJB {
 
     public void addIntervals(Long idAnnotation, Collection<Interval> intervalToAdd) {
         Annotation annot = findById(idAnnotation);
-
         //on doit vérifier que chaque interval ne chevauche aucun autre...
         for (Interval toAdd : intervalToAdd) {
-            int nbAnnot = em.createNamedQuery("Interval.intervalOverlap")
+            System.out.println("Recherche interval, parametres: end="+toAdd.getEnd()+" begin="+toAdd.getBegin()+" id="+idAnnotation);
+            Query result = em.createNamedQuery("Interval.intervalOverlap")
                     .setParameter("end", toAdd.getEnd())
                     .setParameter("begin", toAdd.getBegin())
-                    .setParameter("id", idAnnotation)
-                    .getMaxResults();
+                    .setParameter("id", idAnnotation);
+            System.out.println("nombre d'overlap : " + result.getResultList().size());
+            int nbAnnot = result.getResultList().size();
             if (nbAnnot == 0) {
                 annot.addInterval(toAdd);
+                em.persist(annot);
             }
         }
-        em.persist(annot);
     }
 }
