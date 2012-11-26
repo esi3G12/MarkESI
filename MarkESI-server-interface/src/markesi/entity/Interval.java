@@ -26,10 +26,13 @@ import javax.persistence.TableGenerator;
 //cette query permet de vérifier qu'un interval ne chevauche aucun autre interval
 //sur une même annotation. Si elle renvoit 0, on peut valider l'annotation.
 //Si elle renvoit autre 1, on ne peut pas (a priori elle ne devrait jamais renvoyer 2...)
-@NamedQuery(name="Interval.intervalOverlap", query="SELECT inter FROM Interval inter "
-                                          + " WHERE (:end BETWEEN inter.endPos AND inter.beginPos)"
-                                          + " OR (:begin BETWEEN inter.endPos AND inter.beginPos)"
-                                          + "AND inter.id = :id") 
+@NamedQuery(name="Interval.intervalOverlap", query="SELECT inter.beginPos FROM Interval inter "
+                                          + " JOIN  inter.annotation annot"
+                                          + " WHERE annot.id = :id"
+                                          + " AND ((:end BETWEEN inter.beginPos AND inter.endPos)"
+                                          + " OR (:begin BETWEEN inter.beginPos AND inter.endPos)"
+                                          + " OR (:begin <= inter.beginPos AND :end >= inter.endPos))")
+                                            // + " GROUP BY inter.annotation")
 public class Interval implements Serializable {
 
     private static final long serialVersionUID = 1L;
