@@ -6,7 +6,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>FrontController</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/Front</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -14,6 +14,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>FrontController</welcome-file>
+        <welcome-file>Front</welcome-file>
     </welcome-file-list>
 </web-app>
