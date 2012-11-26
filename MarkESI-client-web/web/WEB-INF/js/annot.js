@@ -53,7 +53,7 @@ $(document).ready(function() {
         return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
     }
     
-    $.getJSON("/MarkESI-client-web/json&fileName=" + "test",//getParameter("fileName"),
+    $.getJSON("/MarkESI-client-web/json?action=get&fileName=" + "test",//getParameter("fileName"),
         function(data){
           console.log(data);
         }

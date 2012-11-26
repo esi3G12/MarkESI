@@ -36,35 +36,18 @@ public class JsonController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fileName = request.getParameter("fileName");
-        if (fileName != null) {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter writer = null;
-            try {
-                writer = response.getWriter();
-                JSONObject json = new JSONObject();
-                try {
-                    JSONArray annots = new JSONArray();
-                    Collection<JSONObject> sels = new ArrayList<JSONObject>();
-                    sels.add(jsonSelection(10, 15, 5));
-                    sels.add(jsonSelection(20, 21, 1));
-                    sels.add(jsonSelection(45, 55, 10));
-                    sels.add(jsonSelection(68, 85, 17));     
-                    annots.put(jsonAnnotation("text", "date", sels));
-                    json.put("annotations", annots);
+        String action = request.getParameter("action");
 
-                } catch (JSONException ex) {
-                    Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                writer.write(json.toString());
-            } finally {
-                writer.close();
+        if (action != null && !action.equals("")) {
+            if (action.equals("get")) {
+                getJSON(request, response);
+            } else if (action.equals("post")) {
+                postJSON(request, response);
             }
         }
     }
 
-    public JSONObject jsonAnnotation (String text, String date, Collection<JSONObject> sels) 
+    public JSONObject jsonAnnotation(String text, String date, Collection<JSONObject> sels)
             throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("text", text);
@@ -73,7 +56,7 @@ public class JsonController extends HttpServlet {
         return obj;
     }
 
-    public JSONObject jsonSelection (int start, int end, int length) throws JSONException {
+    public JSONObject jsonSelection(int start, int end, int length) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("start", start);
         obj.put("end", end);
@@ -121,4 +104,55 @@ public class JsonController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void getJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String fileName = request.getParameter("fileName");
+        if (fileName != null && !fileName.equals("")) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter writer = null;
+            try {
+                writer = response.getWriter();
+                JSONObject json = new JSONObject();
+                try {
+                    JSONArray annots = addAnnotations();
+                    json.put("annotations", annots);
+
+                } catch (JSONException ex) {
+                    Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                writer.write(json.toString());
+            } finally {
+                writer.close();
+            }
+        }
+    }
+
+    private JSONArray addAnnotations() throws JSONException {
+        JSONArray annots = new JSONArray();
+        Collection<JSONObject> sels = new ArrayList<JSONObject>();
+        sels.add(jsonSelection(10, 15, 5));
+        sels.add(jsonSelection(20, 21, 1));
+        sels.add(jsonSelection(45, 55, 10));
+        sels.add(jsonSelection(68, 85, 17));
+        annots.put(jsonAnnotation("text", "date", sels));
+
+        return annots;
+    }
+
+    private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String selectionsStr = request.getParameter("selections");
+        // enlève les [] au début et à la fin :
+        selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
+        response.setCharacterEncoding("UTF-8");
+        try {
+            JSONObject selections = new JSONObject(selectionsStr);
+            Logger.getLogger("JsonController").log(Level.INFO, null, selections.toString());
+            response.getWriter().write("success");
+            //TODO change this return for error
+        } catch (JSONException ex) {
+            response.getWriter().write("error");
+        }
+        //traitement des selections
+    }
 }
