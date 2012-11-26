@@ -23,6 +23,7 @@ import markesi.business.AnnotationEJB;
 import markesi.business.SubFileEJB;
 import markesi.entity.Annotation;
 import markesi.entity.SubFile;
+import markesi.exception.IntervalOverlapException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -78,7 +79,7 @@ public class AnnotationEJBTest {
     }
 
     @Test
-    public void addAnnotationWithIntervals() {
+    public void addAnnotationWithIntervals() throws IntervalOverlapException {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
@@ -96,7 +97,7 @@ public class AnnotationEJBTest {
     }
 
     @Test
-    public void addAnnotationWithIntervals2() {
+    public void addAnnotationWithIntervals2() throws IntervalOverlapException {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
@@ -131,8 +132,8 @@ public class AnnotationEJBTest {
         assertNull(AnnotationEJB.findById(annotationReturned.getId()));
     }
 
-    @Test
-    public void addIntervalSimilaires() {
+    @Test(expected = IntervalOverlapException.class)
+    public void addIntervalSimilaires() throws IntervalOverlapException {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
@@ -164,8 +165,8 @@ public class AnnotationEJBTest {
 
     }
 
-    @Test
-    public void addIntervalChevauche() {
+    @Test(expected = IntervalOverlapException.class)
+    public void addIntervalChevauche() throws IntervalOverlapException {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();

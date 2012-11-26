@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import markesi.entity.SubFile;
+import markesi.exception.IntervalOverlapException;
 
 /**
  *
@@ -34,7 +35,7 @@ public class AnnotationEJB {
         return annotation;
     }
 
-    public Annotation createWithIntervals(String test, Collection<Interval> intervals) {
+    public Annotation createWithIntervals(String test, Collection<Interval> intervals) throws IntervalOverlapException {
         Annotation annot = create(test);
         em.persist(annot);
         addIntervals(annot.getId(), intervals);
@@ -49,21 +50,11 @@ public class AnnotationEJB {
         em.remove(findById(annotation.getId()));
     }
 
-    public void addIntervals(Long idAnnotation, Collection<Interval> intervalToAdd) {
+    public void addIntervals(Long idAnnotation, Collection<Interval> intervalToAdd) throws IntervalOverlapException {
         Annotation annot = findById(idAnnotation);
-        //on doit vérifier que chaque interval ne chevauche aucun autre...
         for (Interval toAdd : intervalToAdd) {
-            System.out.println("Recherche interval, parametres: end="+toAdd.getEnd()+" begin="+toAdd.getBegin()+" id="+idAnnotation);
-            Query result = em.createNamedQuery("Interval.intervalOverlap")
-                    .setParameter("end", toAdd.getEnd())
-                    .setParameter("begin", toAdd.getBegin())
-                    .setParameter("id", idAnnotation);
-            System.out.println("nombre d'overlap : " + result.getResultList().size());
-            int nbAnnot = result.getResultList().size();
-            if (nbAnnot == 0) {
                 annot.addInterval(toAdd);
-                em.persist(annot);
-            }
+                em.persist(annot);  
         }
     }
 }

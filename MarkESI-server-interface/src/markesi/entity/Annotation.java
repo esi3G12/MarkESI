@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import markesi.exception.IntervalOverlapException;
 
 /**
  *
@@ -35,23 +36,17 @@ public class Annotation implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "Annotation")
     @TableGenerator(name = "Annotation", allocationSize = 1)
     private Long id;
-    
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "annotation")
     private Collection<Interval> intervalCollection;
-    
     @Basic(optional = false)
     @Column(name = "TEXT")
     private String text;
     @Column(name = "DATEANNOT")
     @Temporal(TemporalType.DATE)
     private Date dateAnnot;
-    
     @ManyToOne(optional = false)
     @JoinColumn(name = "SUBFILE", referencedColumnName = "ID")
     private SubFile subfile;
-    
-    
 
     public Long getId() {
         return id;
@@ -85,8 +80,12 @@ public class Annotation implements Serializable {
         this.intervalCollection = intervalCollection;
     }
 
-    public void addInterval(Interval toAdd) {
-        this.intervalCollection.add(toAdd);
+    public void addInterval(Interval toAdd) throws IntervalOverlapException {
+        if (!isOverlaping(toAdd)) {
+            this.intervalCollection.add(toAdd);
+        }else{
+            throw new IntervalOverlapException("L'ajout de cet interval aurait créé un overlaping");
+        }
     }
 
     public void setSubFile(SubFile subfile) {
@@ -115,6 +114,20 @@ public class Annotation implements Serializable {
             return false;
         }
         return true;
+    }
+
+    //c'est un peu bourrin, mais impossible de le faire avec une namedquery :/
+    public boolean isOverlaping(Interval intervalEntree) {
+        for (Interval intervalFromThis : this.getIntervalCollection()) {
+            if ((intervalEntree.getBegin() >= intervalFromThis.getBegin() && intervalEntree.getBegin() <= intervalFromThis.getEnd())
+                    || (intervalEntree.getEnd() >= intervalFromThis.getBegin() && intervalEntree.getEnd() <= intervalFromThis.getEnd())
+                    || intervalEntree.getBegin() <= intervalFromThis.getBegin() && intervalEntree.getEnd() >= intervalFromThis.getEnd()) {
+                //si oui, alors on retourne vrai (= il y a un overlap)
+                return true;
+            }
+        }
+        //si on arrive ici, pas d'overlap
+        return false;
     }
 
     @Override
