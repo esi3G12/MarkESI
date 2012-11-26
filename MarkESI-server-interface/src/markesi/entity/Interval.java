@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import markesi.exception.EndBeforeBeginException;
 
 /**
  *
@@ -23,24 +24,9 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "INTERVAL")
-//cette query permet de vérifier qu'un interval ne chevauche aucun autre interval
-//sur une même annotation. Si elle renvoit 0, on peut valider l'annotation.
-//Si elle renvoit autre 1, on ne peut pas (a priori elle ne devrait jamais renvoyer 2...)
-
-
-/*@NamedQuery(name="Interval.intervalOverlap", query="SELECT count(inter.beginPos) FROM Interval inter "
-                                          + " JOIN  inter.annotation annot"
-                                          + " WHERE ((:end BETWEEN inter.beginPos AND inter.endPos)"
-                                          + " OR (:begin BETWEEN inter.beginPos AND inter.endPos)"
-                                          + " OR (:begin <= inter.beginPos AND :end >= inter.endPos))"
-                                          + " AND inter.annotation.id = :id")
-                                            // + " GROUP BY inter.annotation")
-                                            * */
 public class Interval implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "Interval")
     @TableGenerator(name = "Interval", allocationSize = 1)
     @Id
@@ -51,7 +37,6 @@ public class Interval implements Serializable {
     @Basic(optional = false)
     @Column(name = "endPos")
     private int endPos;
-    
     @ManyToOne(optional = false)
     @JoinColumn(name = "ANNOTATION", referencedColumnName = "ID")
     private Annotation annotation;
@@ -68,16 +53,27 @@ public class Interval implements Serializable {
         return beginPos;
     }
 
-    public void setBegin(int begin) {
-        this.beginPos = begin;
+    public void setBegin(int begin) throws EndBeforeBeginException {
+        if (begin >= endPos) {
+            throw new EndBeforeBeginException("Le début de l'interval ne peut être placé avant la fin de l'interval.");
+        } else {
+            this.beginPos = begin;
+
+        }
     }
 
     public int getEnd() {
         return endPos;
     }
 
-    public void setEnd(int end) {
-        this.endPos = end;
+    public void setEnd(int end) throws EndBeforeBeginException {
+        if (end <= beginPos) {
+            throw new EndBeforeBeginException("La fin de l'interval ne peut être placé avant le début de l'interval.");
+
+        } else {
+            this.endPos = end;
+
+        }
     }
 
     public Long getId() {

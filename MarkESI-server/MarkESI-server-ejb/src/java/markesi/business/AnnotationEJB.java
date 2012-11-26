@@ -54,7 +54,7 @@ public class AnnotationEJB {
         Annotation annot = findById(idAnnotation);
         for (Interval toAdd : intervalToAdd) {
                 annot.addInterval(toAdd);
-                em.persist(annot);  
         }
+  //      em.persist(annot);
     }
 }

@@ -23,6 +23,7 @@ import markesi.business.AnnotationEJB;
 import markesi.business.SubFileEJB;
 import markesi.entity.Annotation;
 import markesi.entity.SubFile;
+import markesi.exception.EndBeforeBeginException;
 import markesi.exception.IntervalOverlapException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -83,10 +84,15 @@ public class AnnotationEJBTest {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
-        inter.setBegin(1);
-        inter.setEnd(5);
-        inter2.setBegin(9);
-        inter2.setEnd(15);
+        try {
+            inter.setBegin(1);
+            inter.setEnd(5);
+            inter2.setBegin(9);
+            inter2.setEnd(15);
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         intervals.add(inter);
         intervals.add(inter2);
 
@@ -101,10 +107,15 @@ public class AnnotationEJBTest {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
-        inter.setBegin(1);
-        inter.setEnd(5);
-        inter2.setBegin(9);
-        inter2.setEnd(15);
+        try {
+            inter.setBegin(1);
+            inter.setEnd(5);
+            inter2.setBegin(9);
+            inter2.setEnd(15);
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         intervals.add(inter);
         intervals.add(inter2);
 
@@ -137,10 +148,15 @@ public class AnnotationEJBTest {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
-        inter.setBegin(1);
-        inter.setEnd(5);
-        inter2.setBegin(1);
-        inter2.setEnd(5);
+        try {
+            inter.setBegin(1);
+            inter.setEnd(5);
+            inter2.setBegin(1);
+            inter2.setEnd(5);
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         intervals.add(inter);
         intervals.add(inter2);
 
@@ -150,10 +166,15 @@ public class AnnotationEJBTest {
         Collection<Interval> intervals2 = new ArrayList<Interval>();
         Interval inter3 = new Interval();
         Interval inter4 = new Interval();
-        inter3.setBegin(1);
-        inter3.setEnd(5);
-        inter4.setBegin(1);
-        inter4.setEnd(5);
+        try {
+            inter3.setBegin(1);
+            inter3.setEnd(5);
+            inter4.setBegin(1);
+            inter4.setEnd(5);
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         intervals.add(inter3);
         intervals.add(inter4);
 
@@ -170,10 +191,15 @@ public class AnnotationEJBTest {
         Collection<Interval> intervals = new ArrayList<Interval>();
         Interval inter = new Interval();
         Interval inter2 = new Interval();
-        inter.setBegin(1);
-        inter.setEnd(5);
-        inter2.setBegin(3);
-        inter2.setEnd(8);
+        try {
+            inter.setBegin(1);
+            inter.setEnd(5);
+            inter2.setBegin(3);
+            inter2.setEnd(8);
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         intervals.add(inter);
         intervals.add(inter2);
 
@@ -186,6 +212,61 @@ public class AnnotationEJBTest {
 
         }
         //on ne devrait pas pouvoir ajouter des intervals qui se chevauchent
+        assertEquals(1, annotationReturned.getIntervalCollection().size());
+    }
+
+    @Test(expected = IntervalOverlapException.class)
+    public void addIntervalComprenantAutreInterval() throws IntervalOverlapException {
+        Collection<Interval> intervals = new ArrayList<Interval>();
+        Interval inter = new Interval();
+        Interval inter2 = new Interval();
+        try {
+            inter.setBegin(1);
+            inter.setEnd(10);
+            inter2.setBegin(2);
+            inter2.setEnd(8);
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        intervals.add(inter);
+        intervals.add(inter2);
+
+        int i = 0;
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        for (Interval interval : annotationReturned.getIntervalCollection()) {
+            if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
+                i++;
+            }
+        }
+        //on ne devrait pas pouvoir ajouter des intervals qui se chevauchent
+        assertEquals(1, annotationReturned.getIntervalCollection().size());
+        try {
+            inter2.setBegin(20);
+            inter2.setEnd(30);
+
+        } catch (EndBeforeBeginException ex) {
+            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        annotationReturned.addInterval(inter2);
+        assertEquals(2, annotationReturned.getIntervalCollection().size());
+    }
+
+    @Test(expected = EndBeforeBeginException.class)
+    public void addIntervalAvecMauvaisDebut() throws IntervalOverlapException, EndBeforeBeginException {
+        Collection<Interval> intervals = new ArrayList<Interval>();
+        Interval inter = new Interval();
+        Interval inter2 = new Interval();
+
+        inter.setBegin(1);
+        inter.setEnd(10);
+        inter2.setBegin(2);
+        inter2.setEnd(8);
+
+        intervals.add(inter);
+        intervals.add(inter2);
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+
         assertEquals(1, annotationReturned.getIntervalCollection().size());
     }
 }
