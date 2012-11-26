@@ -18,24 +18,26 @@ import markesi.entity.Interval;
 @Stateless
 @LocalBean
 public class IntervalEJB {
-    //TODO: persistance unit a modifier 
+
     @PersistenceContext(unitName = "MarkESI-PU")
     private EntityManager em;
 
-    public Interval create(int beginLine, int beginChar, int endLine, int endChar) {
+    public Interval create(int beginPos, int endPos) {
         Interval interval = new Interval();
-        interval.setBeginLine(beginLine);
-        interval.setBeginChar(beginChar);
-        interval.setEndLine(endLine);
-        interval.setEndChar(endChar);      
-        
+        interval.setBegin(beginPos);
+        interval.setEnd(endPos);
         em.persist(interval);
         return interval;
     }
-    
-    public void delete(Interval interval){   
-        em.remove(interval);
+
+    public Interval findById(Long id) {
+        return em.find(Interval.class, id);
     }
 
-
+    public void delete(Interval interval) {
+        em.remove(findById(interval.getId()));
+    }
+    
+    //pas besoin de creer de mÃ©thodes modifier a mon sens, il suffit de supprimer et recrÃ©er;
+    //ou plus simplement de bien selectionner (l'interface permet de modifier la selection)
 }

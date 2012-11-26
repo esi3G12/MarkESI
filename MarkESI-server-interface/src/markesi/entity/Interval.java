@@ -30,20 +30,39 @@ public class Interval implements Serializable {
     @TableGenerator(name = "Interval", allocationSize = 1)
     private Long id;
     @Basic(optional = false)
-    @Column(name = "BEGINLINE")
-    private int beginLine;
+    @Column(name = "beginPos")
+    private int beginPos;
     @Basic(optional = false)
-    @Column(name = "BEGINCHAR")
-    private int beginChar;
-    @Basic(optional = false)
-    @Column(name = "ENDLINE")
-    private int endLine;
-    @Basic(optional = false)
-    @Column(name = "ENDCHAR")
-    private int endChar;
-    @JoinColumn(name = "IDANNOTATION", referencedColumnName = "ID")
-   // @ManyToOne(optional = false)
-   // private Annotation annotation;
+    @Column(name = "endPos")
+    private int endPos;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ANNOTATION", referencedColumnName = "ID")
+    private Annotation annotation;
+
+    public Annotation getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(Annotation annotation) {
+        this.annotation = annotation;
+    }
+
+    public int getBegin() {
+        return beginPos;
+    }
+
+    public void setBegin(int begin) {
+        this.beginPos = begin;
+    }
+
+    public int getEnd() {
+        return endPos;
+    }
+
+    public void setEnd(int end) {
+        this.endPos = end;
+    }
 
     public Long getId() {
         return id;
@@ -52,47 +71,6 @@ public class Interval implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public int getBeginLine() {
-        return beginLine;
-    }
-
-    public void setBeginLine(int begin) {
-        this.beginLine = begin;
-    }
-
-    public int getBeginChar() {
-        return beginChar;
-    }
-
-    public void setBeginChar(int begin) {
-        this.beginChar = begin;
-    }
-
-    public int getEndLine() {
-        return beginLine;
-    }
-
-    public void setEndLine(int end) {
-        this.endLine = end;
-    }
-
-    public int getEndChar() {
-        return endChar;
-    }
-
-    public void setEndChar(int end) {
-        this.endChar = end;
-    }
-
-    /*
-    public void setAnnotation(Annotation annotation) {
-        this.annotation = annotation;
-    }
-
-    public Annotation getAnnotation() {
-        return this.annotation;
-    }*/
 
     @Override
     public int hashCode() {
@@ -118,5 +96,4 @@ public class Interval implements Serializable {
     public String toString() {
         return "g12.annotation.entity.Interval[ id=" + id + " ]";
     }
-
 }

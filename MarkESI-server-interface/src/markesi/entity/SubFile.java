@@ -5,8 +5,10 @@
 package markesi.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -45,10 +48,14 @@ public class SubFile implements Serializable {
     @Basic(optional = false)
     @Column(name = "FILE_PATH")
     private String filePath;
-    @JoinColumn(name="SUBMISSION", referencedColumnName="ID")
-    @ManyToOne(optional=false)
+    
+    @JoinColumn(name = "SUBMISSION", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
     private Submission submission;
     
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "subfile")
+    private Collection<Annotation> annotationCollection;
+
     public SubFile() {
     }
 
@@ -90,6 +97,18 @@ public class SubFile implements Serializable {
 
     public void setSubmission(Submission submission) {
         this.submission = submission;
+    }
+
+    public Collection<Annotation> getAnnotationCollection() {
+        return annotationCollection;
+    }
+
+    public void setAnnotationCollection(Collection<Annotation> annotationCollection) {
+        this.annotationCollection = annotationCollection;
+    }
+
+    public void addAnnotation(Annotation toAdd) {
+        this.annotationCollection.add(toAdd);
     }
 
     @Override

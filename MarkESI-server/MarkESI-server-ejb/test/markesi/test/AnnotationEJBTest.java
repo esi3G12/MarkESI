@@ -4,6 +4,15 @@
  */
 package markesi.test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import markesi.entity.Interval;
+import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,7 +20,9 @@ import javax.ejb.EJB;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.AnnotationEJB;
+import markesi.business.SubFileEJB;
 import markesi.entity.Annotation;
+import markesi.entity.SubFile;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -26,18 +37,22 @@ import static org.junit.Assert.*;
 public class AnnotationEJBTest {
 
     private static EJBContainer container;
-    //@EJB
+    @EJB
     private static AnnotationEJB AnnotationEJB;
+    private static SubFileEJB subFileEJB;
 
     public AnnotationEJBTest() {
     }
 
     @BeforeClass
     public static void setUpClass() {
-        container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
         try {
+            container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
+
             AnnotationEJB = (AnnotationEJB) container.getContext().lookup(
                     "java:global/classes/AnnotationEJB");
+            subFileEJB = (SubFileEJB) container.getContext().lookup(
+                    "java:global/classes/SubFileEJB");
         } catch (NamingException ex) {
             Logger.getLogger(SubmissionEJBTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,10 +71,62 @@ public class AnnotationEJBTest {
     public void tearDown() {
     }
 
-    
     @Test
     public void addAnnotation() {
-        Annotation annotationReturned = AnnotationEJB.add("test");        
+        Annotation annotationReturned = AnnotationEJB.create("test");
         assertEquals(annotationReturned, AnnotationEJB.findById(annotationReturned.getId()));
     }
+
+    @Test
+    public void addAnnotationWithIntervals() {
+        Collection<Interval> intervals = new ArrayList<Interval>();
+        Interval inter = new Interval();
+        Interval inter2 = new Interval();
+        inter.setBegin(1);
+        inter.setEnd(5);
+        inter2.setBegin(9);
+        inter2.setEnd(15);
+        intervals.add(inter);
+        intervals.add(inter2);
+
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        //on a bien une collection de taille2
+        assertEquals(2, annotationReturned.getIntervalCollection().size());
+    }
+
+    @Test
+    public void addAnnotationWithIntervals2() {
+        Collection<Interval> intervals = new ArrayList<Interval>();
+        Interval inter = new Interval();
+        Interval inter2 = new Interval();
+        inter.setBegin(1);
+        inter.setEnd(5);
+        inter2.setBegin(9);
+        inter2.setEnd(15);
+        intervals.add(inter);
+        intervals.add(inter2);
+
+        int i = 0;
+        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        for (Interval interval : annotationReturned.getIntervalCollection()) {
+            if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
+                i++;
+            }
+            //les intervals ont bien Ã©tÃ© sauvÃ© (ID!=0)
+            assertFalse(interval.getId() == 0);
+        }
+        //on a bien un seul interval égal à inter (pas deux)
+        assertEquals(1, i);
+    }
+
+    @Test
+    public void testDelete() {
+
+        Annotation annotationReturned = AnnotationEJB.create("test");
+        assertEquals(annotationReturned, AnnotationEJB.findById(annotationReturned.getId()));
+        AnnotationEJB.delete(annotationReturned);
+        //on ne trouve plus l'annotation
+        assertNull(AnnotationEJB.findById(annotationReturned.getId()));
+    }
+
 }

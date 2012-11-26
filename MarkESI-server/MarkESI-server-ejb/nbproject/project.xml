@@ -5,8 +5,8 @@
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
             <name>MarkESI-server-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
-            <included-library dirs="200">reference.MarkESI-server-interface.jar</included-library>
             <included-library dirs="200">file.reference.commons-net-3.1.jar</included-library>
+            <included-library dirs="200">reference.MarkESI-server-interface.jar</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
             </source-roots>
