@@ -88,10 +88,6 @@ $(document).ready(function() {
             }
         }
     }
-    
-    function escapeHTML(string) {
-        return string.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
 
     function ajouteSelection() {
         if (aucuneSelection()) {
