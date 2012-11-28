@@ -49,6 +49,8 @@ public class FrontController extends HttpServlet {
                     manageFile(request, response);
                 } else if (action.equals("exploreFile")) {
                     exploreFile(request, response);
+                } else if (action.equals("uploadFile")) {
+                    uploadFile(request, response);
                 }
             } else {
                 //No action = just index page
@@ -164,5 +166,11 @@ public class FrontController extends HttpServlet {
         String[] pathParts = replace.split("/");
         //we take the last part = just the name of the file
         return pathParts[pathParts.length-1];
+    }
+    
+    private void uploadFile(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "Upload Fichier");
+        List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
+        setViewsAttribute(request, viewsList);
     }
 }

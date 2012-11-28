@@ -94,10 +94,6 @@ $(document).ready(function() {
     }
 
     function ajouteSelection() {
-        //appel du FrontController en ajax pour l'ajout de la sélection
-        //si la sélection est valide (pas d'intersection avec une autre)
-        //(vérification dans le FrontController ET dans le javascript
-        //Alors on rajoute cette sélection à l'annotation courante
         if (aucuneSelection()) {
             no_selection_div.hide();
         }
@@ -154,14 +150,20 @@ $(document).ready(function() {
         }
 
         //ajout de l'annotation via le FrontController
-        curr_annot++; //on passe à l'annotation suivante
-        curr_selection.annotation = curr_annot; //les séléctions sont maintenants destinées à l'annotation suivante
-        $('.cur_sel').removeClass().addClass('sel').addClass('sel_of_annot_' + curr_annot);
-        //on ajoute la class 'sel' aux sélections et une autre class pour avoir 
-        //toutes les sélections d'une annotations d'un coup grâce à $('.sel_of_annot' + num_annot)
-        majPanel();
+        $.post("/MarkESI-client-web/json?action=post", {
+            "selections" : JSON.stringify(selections)
+        },
+        function(data) {
+            //TODO data = success OR data = error
+            curr_annot++; //on passe à l'annotation suivante
+            curr_selection.annotation = curr_annot; //les séléctions sont maintenants destinées à l'annotation suivante
+            $('.cur_sel').removeClass().addClass('sel').addClass('sel_of_annot_' + curr_annot);
+            //on ajoute la class 'sel' aux sélections et une autre class pour avoir 
+            //toutes les sélections d'une annotations d'un coup grâce à $('.sel_of_annot' + num_annot)
+            majPanel();
 
-        notification('Annotation ' + curr_annot + ' ajout&eacute;e !', type_message.INFO);
+            notification('Annotation ' + curr_annot + ' ajout&eacute;e !', type_message.INFO);
+        }, "text");
     }
 
     function setNoSelection() {

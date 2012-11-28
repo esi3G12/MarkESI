@@ -10,7 +10,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>FrontController</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/Front</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>JsonController</servlet-name>
@@ -22,6 +22,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>FrontController</welcome-file>
+        <welcome-file>Front</welcome-file>
     </welcome-file-list>
 </web-app>
