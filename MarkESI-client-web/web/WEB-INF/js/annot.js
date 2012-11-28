@@ -14,6 +14,7 @@ $(document).ready(function() {
             div += '<div class="selection">' + 
             escapeHTML(text_div.text().substring(sel.start, sel.end)) +
             '</div>';
+            addClass(0, i, sel, 'cur_sel');
         }
         
         div += '</div></div>';
