@@ -18,8 +18,10 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import markesi.entity.Annotation;
 import markesi.entity.SubFile;
+import markesi.entity.Submission;
 
 /**
  *
@@ -39,6 +41,7 @@ public class SubFileEJB {
         return em.find(SubFile.class, id);
     }
 
+    
     public SubFile add(InputStream content, String fileName, String path) {
         SubFile subFile = new SubFile();
         subFile.setDate(new Date());
@@ -94,5 +97,12 @@ public class SubFileEJB {
         //on provoque le chargement de ce qui n'est pas automatiquement attaché
         annot.getSubFile().getFileName();
         fileIn.getAnnotationCollection().size();
+    }
+
+    public Submission getSubmission(SubFile subfile) {
+        Query query = em.createNamedQuery("SubFile.getSubmission");
+        query.setParameter("id", subfile.getId());
+        Submission sub = (Submission) query.getSingleResult();
+        return sub;
     }
 }

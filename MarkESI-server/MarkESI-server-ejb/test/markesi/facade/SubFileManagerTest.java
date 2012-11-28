@@ -101,6 +101,7 @@ public class SubFileManagerTest {
         Submission result = subfileManager.addSubmission(subName);
         String fileName = "test.java";
         subfileManager.addSubFileToSubmission("content for test", fileName, result);
+        //assertEquals(result, );
     }
     
     @Test(expected = MarkESIException.class)

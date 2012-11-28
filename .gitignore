@@ -1,2 +1,4 @@
 /MarkESI-client-web/build/
 /MarkESI-client-web/dist/
+/MarkESI-server/MarkESI-server-ejb/build/
+/MarkESI-server-interface/build/
