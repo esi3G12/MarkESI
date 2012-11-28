@@ -51,8 +51,18 @@ public class AnnotationEJB {
     public void addIntervals(Long idAnnotation, Collection<Interval> intervalToAdd) {
         Annotation annot = findById(idAnnotation);
         for (Interval toAdd : intervalToAdd) {
-            annot.addInterval(toAdd);
+            addInterval(annot, toAdd);
         }
+        em.persist(annot);
+    }
+    
+    public void addInterval(Long idAnnotation, Interval intervalToAdd) {
+        Annotation annot = findById(idAnnotation);
+        addInterval(annot, intervalToAdd);
+    }
+    
+    public void addInterval(Annotation annot, Interval intervalToAdd) {
+        annot.addInterval(intervalToAdd);
         em.persist(annot);
     }
 }

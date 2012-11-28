@@ -85,7 +85,7 @@ public class FrontController extends HttpServlet {
             List<String> viewsList = Arrays.asList("file-view.jsp");
             setViewsAttribute(request, viewsList);
         } else {
-            throw new FileNotFoundException("Le fichier n'existe pas !");
+            throw new FileNotFoundException("Ce fichier n'existe pas !");
         }
     }
 

@@ -20,6 +20,7 @@ import javax.ejb.EJB;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.AnnotationEJB;
+import markesi.business.IntervalEJB;
 import markesi.business.SubFileEJB;
 import markesi.entity.Annotation;
 import markesi.entity.SubFile;
@@ -37,9 +38,9 @@ import static org.junit.Assert.*;
 public class AnnotationEJBTest {
 
     private static EJBContainer container;
-    @EJB
-    private static AnnotationEJB AnnotationEJB;
+    private static AnnotationEJB annotationEJB;
     private static SubFileEJB subFileEJB;
+    private static IntervalEJB intervalEJB;
 
     public AnnotationEJBTest() {
     }
@@ -49,10 +50,12 @@ public class AnnotationEJBTest {
         try {
             container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
 
-            AnnotationEJB = (AnnotationEJB) container.getContext().lookup(
+            annotationEJB = (AnnotationEJB) container.getContext().lookup(
                     "java:global/classes/AnnotationEJB");
             subFileEJB = (SubFileEJB) container.getContext().lookup(
                     "java:global/classes/SubFileEJB");
+            intervalEJB = (IntervalEJB) container.getContext().lookup(
+                    "java:global/classes/IntervalEJB");
         } catch (NamingException ex) {
             Logger.getLogger(SubmissionEJBTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,8 +76,8 @@ public class AnnotationEJBTest {
 
     @Test
     public void addAnnotation() {
-        Annotation annotationReturned = AnnotationEJB.create("test");
-        assertEquals(annotationReturned, AnnotationEJB.findById(annotationReturned.getId()));
+        Annotation annotationReturned = annotationEJB.create("test");
+        assertEquals(annotationReturned, annotationEJB.findById(annotationReturned.getId()));
     }
 
     @Test
@@ -89,7 +92,7 @@ public class AnnotationEJBTest {
         intervals.add(inter);
         intervals.add(inter2);
 
-        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
         //on a bien une collection de taille2
         assertEquals(2, annotationReturned.getIntervalCollection().size());
     }
@@ -107,7 +110,7 @@ public class AnnotationEJBTest {
         intervals.add(inter2);
 
         int i = 0;
-        Annotation annotationReturned = AnnotationEJB.createWithIntervals("test", intervals);
+        Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
         for (Interval interval : annotationReturned.getIntervalCollection()) {
             if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
                 i++;
@@ -122,11 +125,41 @@ public class AnnotationEJBTest {
     @Test
     public void testDelete() {
 
-        Annotation annotationReturned = AnnotationEJB.create("test");
-        assertEquals(annotationReturned, AnnotationEJB.findById(annotationReturned.getId()));
-        AnnotationEJB.delete(annotationReturned);
+        Annotation annotationReturned = annotationEJB.create("test");
+        assertEquals(annotationReturned, annotationEJB.findById(annotationReturned.getId()));
+        annotationEJB.delete(annotationReturned);
         //on ne trouve plus l'annotation
-        assertNull(AnnotationEJB.findById(annotationReturned.getId()));
+        assertNull(annotationEJB.findById(annotationReturned.getId()));
+    }
+    
+    @Test
+    public void TestAddInterval() {
+        Annotation annotationReturned = annotationEJB.create("test2");
+        Interval i = intervalEJB.create(0, 5, annotationReturned);
+        
+        assertEquals(annotationReturned.getIntervalCollection().size(), 0);
+        
+        annotationEJB.addInterval(annotationReturned.getId(), i);
+        
+        assertEquals(annotationReturned.getIntervalCollection().size(), 1);
+    }
+    
+    @Test
+    public void TestAddIntervals() {
+        Annotation annotationReturned = annotationEJB.create("test3");
+        Interval i = intervalEJB.create(0, 5, annotationReturned);
+        Interval i2 = intervalEJB.create(1, 15, annotationReturned);
+        Interval i3 = intervalEJB.create(16, 25, annotationReturned);
+        Collection<Interval> intervalCollection = new ArrayList<Interval>();
+        intervalCollection.add(i);
+        intervalCollection.add(i2);
+        intervalCollection.add(i3);
+        
+        assertEquals(annotationReturned.getIntervalCollection().size(), 0);
+        
+        annotationEJB.addIntervals(annotationReturned.getId(), intervalCollection);
+        
+        assertEquals(annotationReturned.getIntervalCollection().size(), 3);
     }
 
 }

@@ -22,10 +22,11 @@ public class IntervalEJB {
     @PersistenceContext(unitName = "MarkESI-PU")
     private EntityManager em;
 
-    public Interval create(int beginPos, int endPos) {
+    public Interval create(int beginPos, int endPos, Annotation annotation) {
         Interval interval = new Interval();
         interval.setBegin(beginPos);
         interval.setEnd(endPos);
+        interval.setAnnotation(annotation);
         em.persist(interval);
         return interval;
     }
@@ -36,6 +37,12 @@ public class IntervalEJB {
 
     public void delete(Interval interval) {
         em.remove(findById(interval.getId()));
+    }
+    
+    public boolean intersects(Interval a, Interval b) {
+        if (b.getBegin() <= a.getEnd() && b.getBegin() >= a.getBegin()) { return true; }
+        if (a.getBegin() <= b.getEnd() && a.getBegin() >= b.getBegin()) { return true; }
+        return false;
     }
     
     //pas besoin de creer de mÃ©thodes modifier a mon sens, il suffit de supprimer et recrÃ©er;
