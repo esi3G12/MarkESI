@@ -82,25 +82,23 @@ public class AnnotationEJBTest {
 
     @Test
     public void addAnnotationWithIntervals() {
+        Annotation annotationReturned = annotationEJB.create("test");
         Collection<Interval> intervals = new ArrayList<Interval>();
-        Interval inter = new Interval();
-        Interval inter2 = new Interval();
-        inter.setBegin(1);
-        inter.setEnd(5);
-        inter2.setBegin(9);
-        inter2.setEnd(15);
+        Interval inter =intervalEJB.create(1,5,annotationReturned);
+        Interval inter2 = intervalEJB.create(9,15,annotationReturned);
         intervals.add(inter);
         intervals.add(inter2);
 
-        Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
+        //Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
         //on a bien une collection de taille2
         assertEquals(2, annotationReturned.getIntervalCollection().size());
     }
 
     @Test
     public void addAnnotationWithIntervals2() {
+        Annotation annotationReturned = annotationEJB.create("test");
         Collection<Interval> intervals = new ArrayList<Interval>();
-        Interval inter = new Interval();
+        Interval inter = new Interval(1, 5);
         Interval inter2 = new Interval();
         inter.setBegin(1);
         inter.setEnd(5);
