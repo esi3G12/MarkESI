@@ -4,26 +4,17 @@
  */
 package markesi.test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import markesi.entity.Interval;
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.AnnotationEJB;
 import markesi.business.IntervalEJB;
 import markesi.business.SubFileEJB;
 import markesi.entity.Annotation;
-import markesi.entity.SubFile;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -108,7 +99,12 @@ public class AnnotationEJBTest {
         intervals.add(inter2);
 
         int i = 0;
+<<<<<<< HEAD
         Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
+=======
+        //TODO finir test sur annotation
+        //Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
+>>>>>>> master
         for (Interval interval : annotationReturned.getIntervalCollection()) {
             if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
                 i++;

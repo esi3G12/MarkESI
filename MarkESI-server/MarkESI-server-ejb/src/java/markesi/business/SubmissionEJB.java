@@ -37,6 +37,8 @@ public class SubmissionEJB {
 
    public void addSubFile(Submission submission, SubFile subFile) {
        submission.getSubFiles().add(subFile);
+       subFile.setSubmission(submission);
        em.merge(submission);
+       em.merge(subFile);
    }
 }

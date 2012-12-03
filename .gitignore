@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 /MarkESI-server-interface/build/
 /MarkESI-server/MarkESI-server-ejb/build/
 /MarkESI-server-interface/dist/
 /MarkESI-server/build/
-/MarkESI-server/MarkESI-server-ejb/dist/
-=======
->>>>>>> 944f92c2f4211a5814d2264aefda3a53878d3834
-/MarkESI-client-web/build/
-/MarkESI-client-web/dist/
+/MarkESI-server/MarkESI-server-ejb/dist

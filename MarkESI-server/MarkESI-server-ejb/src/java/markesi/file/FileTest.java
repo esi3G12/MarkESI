@@ -4,14 +4,23 @@
  */
 package markesi.file;
 
+import javax.ejb.EJB;
+import markesi.business.AnnotationEJB;
+import markesi.facade.SubFileManager;
+
 /**
  *
  * @author G35309
  */
 public class FileTest {
-    private int att;
     
-    public FileTest() {
+    @EJB
+    private static SubFileManager facade;
+    
+    @EJB
+    private static AnnotationEJB annot;
+    
+    public static void main(String[] args) {
         
     }
 }
