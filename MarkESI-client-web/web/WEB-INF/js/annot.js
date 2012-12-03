@@ -1,65 +1,49 @@
 $(document).ready(function() {
     var annotations_div = $('#annotations');
-    var annot;
+    var text_div = $('#code #content');
     
-    function newAnnotObject(n_date, n_text, n_sels) {
-        var new_annot = {
-            date: n_date,
-            text: n_text,
-            sels: n_sels
-        };
-        return new_annot;
+    function highlight (annot)
+    {
+        var to_replace = $('#content');
+        to_replace.text(to_replace.text());
+        for (var i = 0; i < annot.selections.length; i++) {
+            var sel = annot.selections[i];
+            addClass(0, i, sel, 'cur_sel');
+        }
     }
-    
-    function newSelectionObject(n_text, n_start, n_end, n_length, n_isInUse, n_annot) {
-        var new_sel = {
-            text: n_text,
-            start: n_start,
-            end: n_end,
-            length: n_length,
-            isInUse: n_isInUse,
-            annotation: n_annot
-        };
-        return new_sel;
-    }
-    
-    function copy(sel) {
-        return newSelectionObject(sel.text, sel.start, sel.end, sel.length, sel.isInUse, sel.annotation);
-    }
-    
-    var sels = new Array();
-    sels.push(newSelectionObject("nimp", 10, 25, 15, true, 2));
-    sels.push(newSelectionObject("4", 20, 35, 15, true, 2));
-    sels.push(newSelectionObject("5", 60, 65, 5, true, 2));
-    annot = newAnnotObject('19/11/2012', 'iscing ultrices augue, sed rutrum mi pretium ac. Nullam nunc lacus, rutrum eget facilisis vel, ullamco', sels);
     
     function  appendAnnot (annot)
     {
         var div = '<div class="annotation">' +
-            '<div class="text">' + annot.text + '</div>' +
-            '<div class="date">' + annot.date + '</div>' +
-            '<div id="sels">';
+        '<div class="text">' + annot.text + '</div>' +
+        '<div class="date">' + annot.date + '</div>' +
+        '<div id="sels">';
         
-        for (var i = 0; i < annot.sels.length; i++) {
-            div += '<div class="selection">' + annot.sels[i].text + '</div>';
+        for (var i = 0; i < annot.selections.length; i++) {
+            var sel = annot.selections[i];
+            div += '<div class="selection">' + 
+            escapeHTML(text_div.text().substring(sel.start, sel.end)) +
+            '</div>';
         }
         
         div += '</div></div>';
+        div = $(div);
+        div.click(function(){highlight(annot)});
         annotations_div.append(div);
-    }
+    }  
     
     function getParameter (name)
     {
         return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
     }
     
-    $.getJSON("/MarkESI-client-web/json?action=get&fileName=" + "test",//getParameter("fileName"),
+    $.getJSON("/MarkESI-client-web/json?action=get&fileName=" + getParameter("fileName"),
         function(data){
-          console.log(data);
+            $.each(data, function(key, val) {
+                $.each(val, function(key, v) {
+                    appendAnnot(v);
+                });
+            });
         }
-    );
-    
-    appendAnnot(annot);
-    appendAnnot(annot);
-    appendAnnot(annot);
+        );
 });
