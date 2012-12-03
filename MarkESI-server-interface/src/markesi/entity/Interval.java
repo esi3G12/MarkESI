@@ -40,6 +40,15 @@ public class Interval implements Serializable {
     @JoinColumn(name = "ANNOTATION", referencedColumnName = "ID")
     private Annotation annotation;
 
+    public Interval() {
+        
+    }
+    
+    public Interval(int begin, int end) {
+        this.beginPos = begin;
+        this.endPos = end;
+    }
+    
     public Annotation getAnnotation() {
         return annotation;
     }
