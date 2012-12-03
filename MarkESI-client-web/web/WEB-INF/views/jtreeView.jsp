@@ -1,10 +1,13 @@
-<LINK href="lib/css/jqueryFileTree.css" rel="stylesheet" type="text/css">
-<script src="lib/js/easingPlg.js"></script>
-<script src="lib/js/jqueryFileTree.js"></script>
-<script src="lib/js/jtree.js"></script>   
+ <script src="js/jquery.js"></script>
+        <script src="js/easingPlg.js"></script>
+        <script src="js/jqueryFileTree.js"></script>
+        <script src="js/jtree.js"></script>
+        <link type="text/css" rel="stylesheet" href="css/jqueryFileTree.css"/>
+
+<div id="tree"></div>
 <script type="text/javascript">
     $(document).ready( function() {
-        $('#tree').fileTree({ root: '/Documents and Settings/g35079/Desktop' , script: 'lib/connectors/jqueryFileTree.jsp'}, function(file) {
+        $('#tree').fileTree({ root: 'Z:/Test/' , script: 'js/connectors/jqueryFileTree.jsp'}, function(file) {
             alert(file);
         });
     });

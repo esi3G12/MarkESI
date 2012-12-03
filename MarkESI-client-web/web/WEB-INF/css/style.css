@@ -20,6 +20,23 @@ pre {
     white-space: pre;
 }
 
+.annotation {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
+
+#sels {
+    margin-top: 10px;
+}
+
+.annotation .date {
+    color: #777;
+    text-align: right;
+    font-size: 12px;
+}
+
 .selection {
     padding: 3px;
     border: 1px solid #FAE0A5;
@@ -83,14 +100,16 @@ p {
     max-width: 60%;
     margin-right: 1%;
     font-family: monospace, sans-serif;
+    font-size: 0px;
 }
 
 #file {
     display: inline-block;
     line-height: 1.3em;
     border-collapse: collapse;
-    overflow-x: scroll;
+    overflow-x: auto;
     width: 100%;
+    font-size: 14px;
 }
 
 #file #nums {
@@ -102,15 +121,16 @@ p {
 
 #file #code {
     background: #FAF5E8;
+    position: relative;
 }
 
-#file #code pre .cur_sel {
+#file #code .cur_sel {
     background: #FAE0A5;
     border: none;
     padding: 2px 0 0.5px 0;
 }
 
-#file #code pre .sel {
+#file #code .sel {
     background: #FAFAA5;
     border: 1px dashed orange;
 }
@@ -122,7 +142,9 @@ p {
 
 textarea {
     width: 100%;
-    height: 100px;
+    padding: 5px;
+    box-sizing: border-box;
+    height: 80px;
     resize: vertical;
     font-size: 14px;
     font-family: Arial, sans-serif;

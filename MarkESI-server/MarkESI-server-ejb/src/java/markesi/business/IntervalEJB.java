@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import markesi.entity.Annotation;
 import markesi.entity.Interval;
+import markesi.exception.EndBeforeBeginException;
 
 /**
  *
@@ -22,7 +23,7 @@ public class IntervalEJB {
     @PersistenceContext(unitName = "MarkESI-PU")
     private EntityManager em;
 
-    public Interval create(int beginPos, int endPos) {
+    public Interval create(int beginPos, int endPos) throws EndBeforeBeginException {
         Interval interval = new Interval();
         interval.setBegin(beginPos);
         interval.setEnd(endPos);
