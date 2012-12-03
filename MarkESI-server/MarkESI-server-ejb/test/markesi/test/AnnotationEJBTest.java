@@ -99,6 +99,7 @@ public class AnnotationEJBTest {
         intervals.add(inter2);
 
         int i = 0;
+        //TODO finir test sur annotation
         //Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
         for (Interval interval : annotationReturned.getIntervalCollection()) {
             if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
