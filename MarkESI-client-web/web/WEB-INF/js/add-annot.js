@@ -147,7 +147,8 @@ $(document).ready(function() {
 
         //ajout de l'annotation via le FrontController
         $.post("/MarkESI-client-web/json?action=post", {
-            "selections" : JSON.stringify(selections)
+            "selections" : JSON.stringify(selections),
+            "annotation" : curr_annot
         },
         function(data) {
             //TODO data = success OR data = error
@@ -201,9 +202,8 @@ $(document).ready(function() {
 
                 if (selections[i].annotation != curr_selection.annotation && error) {
                     //si pour 2 annotations différentes on a une sélection englobant l'autre == NON erreur
-                    error = !((curr_selection.start < selections[i].start && curr_selection.end > selections[i].end) 
-                        || (curr_selection.start > selections[i].start && curr_selection.end < selections[i].end)
-                        || (curr_selection.start == selections[i].start && curr_selection.end == selections[i].end));
+                    error = !((curr_selection.start <= selections[i].start && curr_selection.end >= selections[i].end) 
+                        || (curr_selection.start >= selections[i].start && curr_selection.end <= selections[i].end));
                 }
             }
 

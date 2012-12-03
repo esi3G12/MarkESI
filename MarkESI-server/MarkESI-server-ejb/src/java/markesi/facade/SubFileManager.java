@@ -7,10 +7,13 @@ package markesi.facade;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import markesi.business.SubFileEJB;
 import markesi.business.SubmissionEJB;
+import markesi.entity.Annotation;
+import markesi.entity.Interval;
 import markesi.entity.SubFile;
 import markesi.entity.Submission;
 import markesi.exceptions.MarkESIException;
@@ -23,7 +26,7 @@ import markesi.exceptions.MarkESIException;
 public class SubFileManager implements SubFileManagerRemote {
 
     @EJB
-    private SubFileEJB subfileEJB;
+    private SubFileEJB subFileEJB;
     
     @EJB
     private SubmissionEJB submissionEJB;
@@ -48,7 +51,7 @@ public class SubFileManager implements SubFileManagerRemote {
         testForLegalName(subFileName);
         InputStream stream = new ByteArrayInputStream(subFileContent.getBytes());
         String path = "C:\\UserLocal\\submissions\\" + submission.getId() + "_" + submission.getName() + "\\";
-        SubFile subFile = subfileEJB.add(stream, subFileName, path);
+        SubFile subFile = subFileEJB.add(stream, subFileName, path);
         submissionEJB.addSubFile(submission, subFile);
     }
 
@@ -62,6 +65,21 @@ public class SubFileManager implements SubFileManagerRemote {
                 name.contains("<") || name.contains("\"") || name.contains("|")){
             throw new MarkESIException("The name of a submission cannot contain these characters: \\/:*?<>\"|");
         }
+    }
+
+    @Override
+    public Collection<Annotation> getAnnotations(Long subFileId) {
+        SubFile file = subFileEJB.getSubFileById(subFileId);
+        if (file != null) {
+            return subFileEJB.getAnnotations(file);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void addAnnotation(Long fileId, Collection<Interval> intervals) {
+        //TODO implémenter addAnnot
     }
 
 }

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import javax.persistence.Query;
 import markesi.entity.Annotation;
 import markesi.entity.SubFile;
 import markesi.entity.Submission;
+import markesi.exceptions.MarkESIException;
 
 /**
  *
@@ -41,7 +43,6 @@ public class SubFileEJB {
         return em.find(SubFile.class, id);
     }
 
-    
     public SubFile add(InputStream content, String fileName, String path) {
         SubFile subFile = new SubFile();
         subFile.setDate(new Date());
@@ -79,24 +80,22 @@ public class SubFileEJB {
         }
     }
 
-    public void setAnnotation(SubFile fileIn, Annotation annot) {
-        //si le fichier est déja persisté, il faut le récupérer car il pourrait
-        // etre détaché..
-        if (fileIn.getId() != 0) {
-            fileIn = getSubFileById(fileIn.getId());
-        }
-        //si l'annotation est déja persistée, il faut la récupérer (car elle est 
-        //détachée du gestionnaire d'entité)..
-        if (annot.getId() != 0) {
-            annot = annotationEJB.findById(annot.getId());
+    public void addAnnotation(SubFile fileIn, Annotation annot) throws MarkESIException {
+        if (fileIn.getId() == 0 || annot.getId() == 0) {
+            throw new MarkESIException("le fichier ou l'annotation n'est pas persisté");
         }
 
+        //si le fichier est déja persisté, il faut le récupérer car il pourrait
+        // etre détaché..
+        annot = annotationEJB.findById(annot.getId());
+        fileIn = getSubFileById(fileIn.getId());
+
         fileIn.addAnnotation(annot);
-        em.persist(fileIn);
-        
-        //on provoque le chargement de ce qui n'est pas automatiquement attaché
-        annot.getSubFile().getFileName();
-        fileIn.getAnnotationCollection().size();
+        em.merge(fileIn);
+    }
+
+    public Collection<Annotation> getAnnotations(SubFile file) {
+        return file.getAnnotationCollection();
     }
 
     public Submission getSubmission(SubFile subfile) {

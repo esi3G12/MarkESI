@@ -106,7 +106,7 @@ public class SubFileEJBTest {
 
             System.out.println("id annotation: " + annotationReturned.getId());
 
-            subFileEJB.setAnnotation(subFile2, annotationReturned);
+            subFileEJB.addAnnotation(subFile2, annotationReturned);
             System.out.println("annotation ajoutee" + "\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
             //on doit réattacher le tout... 
