@@ -7,13 +7,21 @@ package markesi.client.servlet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -50,7 +58,7 @@ public class FrontController extends HttpServlet {
                 } else if (action.equals("exploreFile")) {
                     exploreFile(request, response);
                 } else if (action.equals("uploadFile")) {
-                    uploadFile(request, response);
+                    testUp(request, response);
                 }
             } else {
                 //No action = just index page
@@ -172,5 +180,106 @@ public class FrontController extends HttpServlet {
         request.setAttribute("title", "Upload Fichier");
         List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
         setViewsAttribute(request, viewsList);
+    }
+    
+     private void testUp(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("Upload");
+
+        request.setAttribute("title", "Upload Fichier");
+        List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
+        setViewsAttribute(request, viewsList);
+        
+        // Create a new file upload handler
+        DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
+
+        ServletFileUpload upload = new ServletFileUpload(fileItemFactory);
+
+        // Set upload parameters
+        int yourMaxMemorySize = 512 * 1024 * 8; // en bytes
+        int yourMaxRequestSize = 1024 * 1024 * 8;
+        String yourTempDirectory = "Z:\\Test\\"; // un répertoire ou tomcat
+        // a
+        // le droit d'écrire
+
+        fileItemFactory.setSizeThreshold(yourMaxMemorySize);
+
+        // upload.setSizeThreshold(yourMaxMemorySize);
+        upload.setSizeMax(yourMaxRequestSize);
+        // upload.setRepositoryPath(yourTempDirectory);
+
+        // Parse the request -on recupère tous les champs du formulaire
+        List items;
+        try {
+            items = upload.parseRequest(request);
+
+            // Process the uploaded items
+            Iterator iter = items.iterator();
+            while (iter.hasNext()) {
+
+                FileItem item = (FileItem) iter.next();
+
+                // Process a regular form field
+                if (item.isFormField()) {
+                    String name = item.getFieldName();
+                    String value = item.getString();
+
+                } // Process a file upload
+                else {
+                    String fieldName = item.getFieldName();
+                    String fileName = item.getName();
+                    String contentType = item.getContentType();
+                    boolean isInMemory = item.isInMemory();
+                    long sizeInBytes = item.getSize();
+
+                    boolean writeToFile = true;
+                    // Copie directe pour les petits fichiers, sinon streaming (le
+                    // streaming ne marche pas)
+                    if (sizeInBytes > 512 * 1024 * 8) {
+                        writeToFile = false;
+                    }
+
+                    // Process a file upload
+                    if ((writeToFile) & (fieldName.equals("source"))) { // Ecriture directe
+                        System.out.println("Ecriture directe");
+                        File uploadedFile = new File(yourTempDirectory + fileName);
+                        item.write(uploadedFile);
+                    } else { // Streaming
+                        File uploadedFile = new File(yourTempDirectory + fileName); // ou
+                        // sinon
+                        // un	nouveau nom de fichier à la place de fileName
+                        InputStream sourceFile;
+                        try {
+                            sourceFile = item.getInputStream();
+                            OutputStream destinationFile;
+                            try {
+                                destinationFile = new FileOutputStream(uploadedFile);
+                                byte buffer[] = new byte[512 * 1024];
+                                int nbLecture;
+                                while ((nbLecture = sourceFile.read(buffer)) != -1) {
+                                    destinationFile.write(buffer, 0, nbLecture);
+                                }
+                                sourceFile.close();
+                            } catch (FileNotFoundException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        } catch (FileUploadException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

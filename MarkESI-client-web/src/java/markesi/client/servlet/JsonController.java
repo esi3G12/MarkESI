@@ -135,8 +135,11 @@ public class JsonController extends HttpServlet {
         sels.add(jsonSelection(20, 21, 1));
         sels.add(jsonSelection(45, 55, 10));
         sels.add(jsonSelection(68, 85, 17));
-        annots.put(jsonAnnotation("text", "date", sels));
-
+        annots.put(jsonAnnotation("texte annot 1", "17/11/2012", sels));
+        sels = new ArrayList<JSONObject>();
+        sels.add(jsonSelection(35, 67, 32));
+        sels.add(jsonSelection(85, 104, 19));
+        annots.put(jsonAnnotation("texte annot 2", "17/11/2012", sels));
         return annots;
     }
 

@@ -24,6 +24,7 @@ pre {
     margin-bottom: 10px;
     border-bottom: 1px solid #aaa;
     padding-bottom: 5px;
+    cursor: pointer;
 }
 
 #sels {

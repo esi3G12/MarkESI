@@ -1,17 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<form action="?action=upload" method="post" enctype="multipart/form-data">
     <fieldset>
         <legend>Envoi de fichier</legend>
 
-        <label for="description">Description du fichier</label>
-        <input type="text" id="description" name="description" value="" />
-        <br />
+      <form action="Front?action=uploadFile" method="POST" enctype="multipart/form-data">
+            <p>Emission du fichier:<input type="file" name="source" size="30"></p>
 
-        <label for="fichier">Emplacement du fichier <span class="requis">*</span></label>
-        <input type="file" id="fichier" name="fichier" />
-        <br />
-        <input type="hidden" name="action" id="action" value="upload"/>
-        <input type="submit" value="Envoyer" class="sansLabel" />
-        <br />                
+            <p>
+                <input type="submit" name="submitFichier" value="Annuler" title="Annuler l'émission">
+                <input type="submit" name="submitFichier" value="Emettre" title="Emettre le fichier vers le serveur">
+            </p>
+        </form>              
     </fieldset>
 </form>

@@ -7,7 +7,7 @@
 <div id="tree"></div>
 <script type="text/javascript">
     $(document).ready( function() {
-        $('#tree').fileTree({ root: '/Documents and Settings/g35079/Desktop' , script: 'js/connectors/jqueryFileTree.jsp'}, function(file) {
+        $('#tree').fileTree({ root: 'Z:/Test/' , script: 'js/connectors/jqueryFileTree.jsp'}, function(file) {
             alert(file);
         });
     });
