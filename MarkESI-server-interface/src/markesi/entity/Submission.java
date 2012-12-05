@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -29,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "SUBMISSION")
 @XmlRootElement
 public class Submission implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "ID")
@@ -42,10 +45,12 @@ public class Submission implements Serializable {
     @Column(name = "DAT")
     @Temporal(TemporalType.DATE)
     private Date date;
-    @OneToMany(cascade= CascadeType.ALL, mappedBy="submission")
-    private Collection<SubFile> subFiles;    
-    
-    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "submission")
+    private Collection<SubFile> subFiles;
+  /*  @JoinColumn(name = "USER", referencedColumnName = "USERNAME")
+    @ManyToOne(optional = false)
+    private User user;
+*/
     public Long getId() {
         return id;
     }
@@ -102,5 +107,4 @@ public class Submission implements Serializable {
     public String toString() {
         return "markesi.entity.Submission[ id=" + id + " ]";
     }
-    
 }

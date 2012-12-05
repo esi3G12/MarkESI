@@ -11,6 +11,7 @@ import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.IntervalEJB;
 import markesi.entity.Interval;
+import markesi.exception.EndBeforeBeginException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class IntervalEJBTest {
     }
 
     @Test
-    public void addAnnotation() {
+    public void addAnnotation() throws EndBeforeBeginException {
         Interval intervalCreated = IntervalEJB.create(1,5);
         Interval found = IntervalEJB.findById(intervalCreated.getId());
         assertEquals(intervalCreated, found);
@@ -65,7 +66,7 @@ public class IntervalEJBTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws EndBeforeBeginException {
         Interval ntervalReturn = IntervalEJB.create(1,5);
         assertEquals(ntervalReturn, IntervalEJB.findById(ntervalReturn.getId()));
         IntervalEJB.delete(ntervalReturn);

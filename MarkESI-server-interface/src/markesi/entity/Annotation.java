@@ -121,7 +121,6 @@ public class Annotation implements Serializable {
         return true;
     }
 
-    //c'est un peu bourrin, mais impossible de le faire avec une namedquery :/
     public boolean isOverlaping(Interval intervalEntree) {
         for (Interval intervalFromThis : this.getIntervalCollection()) {
             if ((intervalEntree.getBegin() >= intervalFromThis.getBegin() && intervalEntree.getBegin() <= intervalFromThis.getEnd())
