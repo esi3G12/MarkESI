@@ -7,11 +7,8 @@ package markesi.business;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import markesi.entity.User;
 
@@ -38,9 +35,9 @@ public class UserEJB {
     // "Insert Code > Add Business Method")
     public User inscrire(String email, String username, String password, String nom, String prenom) {
         User utilisateur = new User();
-        utilisateur.setId(username);
-        utilisateur.setNom(nom);
-        utilisateur.setPrenom(prenom);
+        utilisateur.setUserName(username);
+        utilisateur.setName(nom);
+        utilisateur.setFirstname(prenom);
         utilisateur.setEmail(email);
         //on genère le MD5 pour le password (histoire de pas le sauver en clair..)
         utilisateur.setPassword(md5(password));
