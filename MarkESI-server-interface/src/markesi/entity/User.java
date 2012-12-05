@@ -5,43 +5,32 @@
 package markesi.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
  * @author LSV
  */
 @Entity
-@Table(name = "utilisateur")
+@Table(name = "USERS")
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username")
     private String userName;
     // @OneToMany(cascade = CascadeType.ALL, mappedBy = "submission")
     //private Collection<Submission> submissionCollection;
     @Basic(optional = false)
-    @Column(name = "NOM")
-    private String nom;
+    @Column(name = "NAME")
+    private String name;
     @Basic(optional = false)
-    @Column(name = "PRENOM")
-    private String prenom;
+    @Column(name = "FIRSTNAME")
+    private String firstname;
     //password doit être stocké en MD5...
     @Basic(optional = false)
     @Column(name = "PASSWORD")
@@ -59,28 +48,28 @@ public class User implements Serializable {
      }
      * */
 
-    public String getId() {
+    public String getUserName() {
         return userName;
     }
 
-    public void setId(String id) {
-        this.userName = id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public String getPassword() {
