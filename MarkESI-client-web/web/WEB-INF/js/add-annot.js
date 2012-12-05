@@ -151,7 +151,6 @@ $(document).ready(function() {
             "annotation" : curr_annot
         },
         function(data) {
-            //TODO data = success OR data = error
             curr_annot++; //on passe à l'annotation suivante
             curr_selection.annotation = curr_annot; //les séléctions sont maintenants destinées à l'annotation suivante
             $('.cur_sel').removeClass().addClass('sel').addClass('sel_of_annot_' + curr_annot);

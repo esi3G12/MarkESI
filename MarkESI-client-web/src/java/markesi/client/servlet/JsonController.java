@@ -15,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import markesi.entity.Interval;
+import markesi.exceptions.MarkESIException;
 import markesi.facade.SubFileManagerRemote;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -152,10 +154,14 @@ public class JsonController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String selectionsStr = request.getParameter("selections");
         
+        System.out.println("post !");
+        
         if (selectionsStr == null || selectionsStr.equals("")) {
             response.getWriter().write("error");
             return;
         }
+        
+        System.out.println("pas d'erreur");
         
         // enlève les [] au début et à la fin :
         selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
@@ -169,6 +175,20 @@ public class JsonController extends HttpServlet {
     }
 
     private void createAnnotation(JSONObject selections) {
-        //subFileManager.
+        ArrayList<Interval> list = new ArrayList<Interval>();
+        try {
+            JSONArray a = selections.getJSONArray("selections");
+            for (int i = 0; i < a.length(); i++) {
+                Interval interval = new Interval();
+                interval.setBegin(((JSONObject)a.get(i)).getInt("start"));
+                interval.setEnd(((JSONObject)a.get(i)).getInt("end"));
+                list.add(interval);
+            }
+            subFileManager.addAnnotation(new Long(0), selections.getString("text"), list);
+        } catch (JSONException ex) {
+            System.out.println(ex);
+        } catch (MarkESIException ex) {
+            System.out.println(ex);
+        }
     }
 }
