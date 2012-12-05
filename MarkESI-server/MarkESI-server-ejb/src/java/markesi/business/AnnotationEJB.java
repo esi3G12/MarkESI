@@ -33,13 +33,6 @@ public class AnnotationEJB {
         return annotation;
     }
 
-    public Annotation createWithIntervals(String test, Collection<Interval> intervals) {
-        Annotation annot = create(test);
-        em.persist(annot);
-        addIntervals(annot.getId(), intervals);
-        return annot;
-    }
-
     public Annotation findById(Long id) {
         return em.find(Annotation.class, id);
     }
@@ -53,7 +46,6 @@ public class AnnotationEJB {
         for (Interval toAdd : intervalToAdd) {
             addInterval(annot, toAdd);
         }
-        em.persist(annot);
     }
     
     public void addInterval(Long idAnnotation, Interval intervalToAdd) {
@@ -63,6 +55,8 @@ public class AnnotationEJB {
     
     public void addInterval(Annotation annot, Interval intervalToAdd) {
         annot.addInterval(intervalToAdd);
-        em.persist(annot);
+        intervalToAdd.setAnnotation(annot);
+        em.merge(annot);
+        em.merge(intervalToAdd);
     }
 }

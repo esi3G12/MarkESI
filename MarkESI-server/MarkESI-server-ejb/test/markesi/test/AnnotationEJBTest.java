@@ -71,12 +71,11 @@ public class AnnotationEJBTest {
         assertEquals(annotationReturned, annotationEJB.findById(annotationReturned.getId()));
     }
 
-    @Test
+    /*@Test
     public void addAnnotationWithIntervals() {
-        Annotation annotationReturned = annotationEJB.create("test");
         Collection<Interval> intervals = new ArrayList<Interval>();
-        Interval inter =intervalEJB.create(1,5,annotationReturned);
-        Interval inter2 = intervalEJB.create(9,15,annotationReturned);
+        Interval inter =intervalEJB.create(1,5);
+        Interval inter2 = intervalEJB.create(9,15);
         intervals.add(inter);
         intervals.add(inter2);
 
@@ -89,7 +88,7 @@ public class AnnotationEJBTest {
     public void addAnnotationWithIntervals2() {
         Annotation annotationReturned = annotationEJB.create("test");
         Collection<Interval> intervals = new ArrayList<Interval>();
-        Interval inter = new Interval(1, 5);
+        Interval inter = new Interval();
         Interval inter2 = new Interval();
         inter.setBegin(1);
         inter.setEnd(5);
@@ -110,7 +109,7 @@ public class AnnotationEJBTest {
         }
         //on a bien un seul interval égal à inter (pas deux)
         assertEquals(1, i);
-    }
+    }*/
 
     @Test
     public void testDelete() {
@@ -125,31 +124,35 @@ public class AnnotationEJBTest {
     @Test
     public void TestAddInterval() {
         Annotation annotationReturned = annotationEJB.create("test2");
-        Interval i = intervalEJB.create(0, 5, annotationReturned);
+        Interval i = intervalEJB.create(0, 5);
         
-        assertEquals(annotationReturned.getIntervalCollection().size(), 0);
+        assertEquals(0, annotationReturned.getIntervalCollection().size());
         
-        annotationEJB.addInterval(annotationReturned.getId(), i);
+        annotationEJB.addInterval(annotationReturned, i);
         
-        assertEquals(annotationReturned.getIntervalCollection().size(), 1);
+        annotationReturned = annotationEJB.findById(annotationReturned.getId());
+        
+        assertEquals(1, annotationReturned.getIntervalCollection().size());
     }
     
     @Test
     public void TestAddIntervals() {
         Annotation annotationReturned = annotationEJB.create("test3");
-        Interval i = intervalEJB.create(0, 5, annotationReturned);
-        Interval i2 = intervalEJB.create(1, 15, annotationReturned);
-        Interval i3 = intervalEJB.create(16, 25, annotationReturned);
+        Interval i = intervalEJB.create(0, 5);
+        Interval i2 = intervalEJB.create(1, 15);
+        Interval i3 = intervalEJB.create(16, 25);
         Collection<Interval> intervalCollection = new ArrayList<Interval>();
         intervalCollection.add(i);
         intervalCollection.add(i2);
         intervalCollection.add(i3);
         
-        assertEquals(annotationReturned.getIntervalCollection().size(), 0);
+        assertEquals(0, annotationReturned.getIntervalCollection().size());
         
         annotationEJB.addIntervals(annotationReturned.getId(), intervalCollection);
         
-        assertEquals(annotationReturned.getIntervalCollection().size(), 3);
+        annotationReturned = annotationEJB.findById(annotationReturned.getId());
+        
+        assertEquals(3, annotationReturned.getIntervalCollection().size());
     }
 
 }

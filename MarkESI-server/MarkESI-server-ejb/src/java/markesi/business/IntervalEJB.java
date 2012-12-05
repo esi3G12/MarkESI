@@ -22,11 +22,10 @@ public class IntervalEJB {
     @PersistenceContext(unitName = "MarkESI-PU")
     private EntityManager em;
 
-    public Interval create(int beginPos, int endPos, Annotation annotation) {
+    public Interval create(int beginPos, int endPos) {
         Interval interval = new Interval();
         interval.setBegin(beginPos);
         interval.setEnd(endPos);
-        interval.setAnnotation(annotation);
         em.persist(interval);
         return interval;
     }

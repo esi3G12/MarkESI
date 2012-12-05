@@ -91,7 +91,9 @@ public class SubFileEJB {
         fileIn = getSubFileById(fileIn.getId());
 
         fileIn.addAnnotation(annot);
+        annot.setSubFile(fileIn);
         em.merge(fileIn);
+        em.merge(annot);
     }
 
     public Collection<Annotation> getAnnotations(SubFile file) {
