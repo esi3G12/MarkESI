@@ -17,11 +17,10 @@ import markesi.exceptions.MarkESIException;
  */
 @Remote
 public interface SubFileManagerRemote {
-    
     public Submission addSubmission(String name) throws MarkESIException;
     public Submission getSubmissionById(Long id);
     public Collection<Annotation> getAnnotations(Long subFileId);
     public void addSubFileToSubmission(String subFileContent, 
             String subFileName, Submission submission) throws MarkESIException;
-    public void addAnnotation(Long fileId, Collection<Interval> intervals);
+    public void addAnnotation(Long fileId, String text, Collection<Interval> intervals) throws MarkESIException;
 }

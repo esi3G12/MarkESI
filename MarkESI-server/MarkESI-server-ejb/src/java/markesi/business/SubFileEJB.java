@@ -35,7 +35,7 @@ public class SubFileEJB {
 
     @EJB
     private AnnotationEJB annotationEJB;
-    private static final int TAILLE_TAMPON = 10240;
+    private static final int BUFFER_SIZE = 10240;
     @PersistenceContext(unitName = "MarkESI-PU")
     private EntityManager em;
 
@@ -57,11 +57,11 @@ public class SubFileEJB {
         BufferedInputStream entree = null;
         BufferedOutputStream sortie = null;
         try {
-            entree = new BufferedInputStream(content, TAILLE_TAMPON);
+            entree = new BufferedInputStream(content, BUFFER_SIZE);
             sortie = new BufferedOutputStream(new FileOutputStream(new File(path + fileName)),
-                    TAILLE_TAMPON);
+                    BUFFER_SIZE);
 
-            byte[] tampon = new byte[TAILLE_TAMPON];
+            byte[] tampon = new byte[BUFFER_SIZE];
             int longueur = 0;
             while ((longueur = entree.read(tampon)) > 0) {
                 sortie.write(tampon, 0, longueur);
