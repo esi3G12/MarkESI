@@ -38,7 +38,7 @@ public class UserEJB {
     // "Insert Code > Add Business Method")
     public User inscrire(String email, String username, String password, String nom, String prenom) {
         User utilisateur = new User();
-        utilisateur.setUsername(username);
+        utilisateur.setId(username);
         utilisateur.setNom(nom);
         utilisateur.setPrenom(prenom);
         utilisateur.setEmail(email);

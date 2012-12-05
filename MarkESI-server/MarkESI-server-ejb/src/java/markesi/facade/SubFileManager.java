@@ -92,6 +92,7 @@ public class SubFileManager implements SubFileManagerRemote {
         }
         
         SubFile file = subFileEJB.getSubFileById(fileId);
+        
         Annotation annot = createAnnotationWithIntervals(text, intervals);
         file.addAnnotation(annot);
     }

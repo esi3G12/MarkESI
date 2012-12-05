@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,14 +28,13 @@ import javax.persistence.TemporalType;
  * @author LSV
  */
 @Entity
-@Table(name = "ANNOTATION")
+@Table(name = "utilisateur")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "USERNAME")
-    private String username;
-   // @OneToMany(cascade = CascadeType.ALL, mappedBy = "submission")
+    @Column(name = "username", unique = true, nullable = false)
+    private String userName;
+    // @OneToMany(cascade = CascadeType.ALL, mappedBy = "submission")
     //private Collection<Submission> submissionCollection;
     @Basic(optional = false)
     @Column(name = "NOM")
@@ -49,15 +49,23 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "EMAIL")
     private String email;
-/*
-    public Collection<Submission> getSubmissionCollection() {
-        return submissionCollection;
+    /*
+     public Collection<Submission> getSubmissionCollection() {
+     return submissionCollection;
+     }
+
+     public void setSubmissionCollection(Collection<Submission> submissionCollection) {
+     this.submissionCollection = submissionCollection;
+     }
+     * */
+
+    public String getId() {
+        return userName;
     }
 
-    public void setSubmissionCollection(Collection<Submission> submissionCollection) {
-        this.submissionCollection = submissionCollection;
+    public void setId(String id) {
+        this.userName = id;
     }
-    * */
 
     public String getNom() {
         return nom;
@@ -73,14 +81,6 @@ public class User implements Serializable {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -102,7 +102,7 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (username != null ? username.hashCode() : 0);
+        hash += (userName != null ? userName.hashCode() : 0);
         return hash;
     }
 
@@ -113,7 +113,7 @@ public class User implements Serializable {
             return false;
         }
         User other = (User) object;
-        if ((this.username == null && other.username != null) || (this.username != null && !this.username.equals(other.username))) {
+        if ((this.userName == null && other.userName != null) || (this.userName != null && !this.userName.equals(other.userName))) {
             return false;
         }
         return true;
@@ -121,6 +121,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "g12.annotation.entity.User[ id=" + username + " ]";
+        return "g12.annotation.entity.User[ id=" + userName + " ]";
     }
 }
