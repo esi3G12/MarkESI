@@ -62,7 +62,7 @@ public class UserEJBTest {
     @Test
     public void inscription() {
         User utilisateur = UserEJB.inscrire("jguerriat@gmail.com", "g30917", "g30917", "guerriat", "jérôme");
-        assertNotNull(UserEJB.getUser());
+        assertNotNull(utilisateur);
     }
     
     @Test

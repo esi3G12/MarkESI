@@ -21,40 +21,31 @@ import markesi.entity.User;
  */
 @Stateful
 public class UserEJB {
-    User user = null;
-    
 
     @PersistenceContext(unitName = "MarkESI-PU")
     private EntityManager em;
 
     public User login(String username, String password) {
         User usr = em.find(User.class, username);
-        if(usr.getPassword().equals(md5(password))){
-            this.user = usr;
+        if (usr.getPassword().equals(md5(password))) {
+            return usr;
+        }else{
+            return null;
         }
-        return user;
-    }
-    
-    public void logout(){
-        this.user = null;
     }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     public User inscrire(String email, String username, String password, String nom, String prenom) {
         User utilisateur = new User();
+        utilisateur.setUsername(username);
         utilisateur.setNom(nom);
         utilisateur.setPrenom(prenom);
         utilisateur.setEmail(email);
         //on genère le MD5 pour le password (histoire de pas le sauver en clair..)
         utilisateur.setPassword(md5(password));
-        em.persist(utilisateur); 
-        this.user = utilisateur;
+        em.persist(utilisateur);
         return utilisateur;
-    }
-    
-    public User getUser(){
-        return this.user;
     }
 
     public static String md5(String input) {
