@@ -20,6 +20,7 @@ import markesi.business.SubmissionEJB;
 import markesi.entity.Annotation;
 import markesi.entity.SubFile;
 import markesi.entity.Submission;
+import markesi.exceptions.MarkESIException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -83,9 +84,7 @@ public class SubFileEJBTest {
     }
 
     @Test
-    public void attachAnnotation() {
-        try {
-
+    public void attachAnnotation() throws MarkESIException, IOException {
             FileOutputStream os = null;
             //on commence par creer un fichier
             new File("C:\\UserLocal\\FileTest.java").createNewFile();
@@ -106,7 +105,7 @@ public class SubFileEJBTest {
 
             System.out.println("id annotation: " + annotationReturned.getId());
 
-            subFileEJB.setAnnotation(subFile2, annotationReturned);
+            subFileEJB.addAnnotation(subFile2, annotationReturned);
             System.out.println("annotation ajoutee" + "\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
             //on doit réattacher le tout... 
@@ -116,11 +115,6 @@ public class SubFileEJBTest {
             assertEquals(1, subFile2.getAnnotationCollection().size());
 
             assertNotNull(annotationReturned.getSubFile());
-        } catch (IOException ex) {
-            System.out.println("ERREUR:" + ex.getMessage());
-            Logger.getLogger(AnnotationEJBTest.class.getName()).log(Level.SEVERE, null, ex);
-            assertTrue(false);
-        }
     }
     
     @Test

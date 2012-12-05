@@ -52,7 +52,7 @@ public class SubFile implements Serializable {
     private String filePath;
     
     @JoinColumn(name = "SUBMISSION", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Submission submission;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "subfile")

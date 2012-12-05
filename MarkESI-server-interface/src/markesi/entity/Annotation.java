@@ -48,7 +48,7 @@ public class Annotation implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateAnnot;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "SUBFILE", referencedColumnName = "ID")
     private SubFile subfile;
 

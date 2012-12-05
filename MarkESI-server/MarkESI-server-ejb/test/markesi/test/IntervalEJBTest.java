@@ -60,8 +60,7 @@ public class IntervalEJBTest {
 
     @Test
     public void addInterval() {
-        Annotation annotation = annotationEJB.create("test");
-        Interval intervalCreated = intervalEJB.create(1,5, annotation);
+        Interval intervalCreated = intervalEJB.create(1,5);
         Interval found = intervalEJB.findById(intervalCreated.getId());
         assertEquals(intervalCreated, found);
         assertEquals(1, found.getBegin());
@@ -70,8 +69,7 @@ public class IntervalEJBTest {
 
     @Test
     public void testDelete() {
-        Annotation annotation = annotationEJB.create("test");
-        Interval intervalCreated = intervalEJB.create(1,5, annotation);
+        Interval intervalCreated = intervalEJB.create(1,5);
         assertEquals(intervalCreated, intervalEJB.findById(intervalCreated.getId()));
         intervalEJB.delete(intervalCreated);
         //on ne trouve plus l'annotation
@@ -80,33 +78,29 @@ public class IntervalEJBTest {
     
     @Test
     public void testNotIntersect() {
-        Annotation annotation = annotationEJB.create("test");
-        Interval i1 = intervalEJB.create(1,5, annotation);
-        Interval i2 = intervalEJB.create(6,7, annotation);
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(6,7);
         assertFalse(intervalEJB.intersects(i1, i2));
     }
     
     @Test
     public void testIntersect() {
-        Annotation annotation = annotationEJB.create("test");
-        Interval i1 = intervalEJB.create(1,5, annotation);
-        Interval i2 = intervalEJB.create(4,7, annotation);
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(4,7);
         assertTrue(intervalEJB.intersects(i1, i2));
     }
     
     @Test
     public void testIntersectTouchIntervals() {
-        Annotation annotation = annotationEJB.create("test");
-        Interval i1 = intervalEJB.create(1,5, annotation);
-        Interval i2 = intervalEJB.create(5,7, annotation);
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(5,7);
         assertTrue(intervalEJB.intersects(i1, i2));
     }
     
     @Test
     public void testIntersectSameIntervals() {
-        Annotation annotation = annotationEJB.create("test");
-        Interval i1 = intervalEJB.create(1,5, annotation);
-        Interval i2 = intervalEJB.create(1,5, annotation);
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(1,5);
         assertTrue(intervalEJB.intersects(i1, i2));
     }
 }

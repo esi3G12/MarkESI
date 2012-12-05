@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import markesi.facade.SubFileManagerRemote;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +26,9 @@ import org.json.JSONObject;
  */
 public class JsonController extends HttpServlet {
 
+    @EJB
+    private SubFileManagerRemote subFileManager;
+    
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -156,11 +161,14 @@ public class JsonController extends HttpServlet {
         selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
         try {
             JSONObject selections = new JSONObject(selectionsStr);
+            createAnnotation(selections);
             response.getWriter().write("success");
-            //TODO change this return for error
         } catch (JSONException ex) {
             response.getWriter().write("error");
         }
-        //traitement des selections
+    }
+
+    private void createAnnotation(JSONObject selections) {
+        //subFileManager.
     }
 }

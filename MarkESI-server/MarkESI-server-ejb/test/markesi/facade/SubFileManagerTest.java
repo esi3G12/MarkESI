@@ -4,19 +4,22 @@
  */
 package markesi.facade;
 
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
+import markesi.business.SubFileEJB;
+import markesi.entity.SubFile;
 import markesi.entity.Submission;
 import markesi.exceptions.MarkESIException;
 import markesi.test.SubmissionEJBTest;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -26,6 +29,7 @@ public class SubFileManagerTest {
     
     private static EJBContainer container;
     private static SubFileManagerRemote subfileManager;
+    private static SubFileEJB subFileEJB;
     
     public SubFileManagerTest() {
     }
@@ -35,7 +39,9 @@ public class SubFileManagerTest {
         container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
         try {
             subfileManager = (SubFileManagerRemote) container.getContext().lookup(
-                    "java:global/classes/SubFileManager");            
+                    "java:global/classes/SubFileManager");
+            subFileEJB = (SubFileEJB) container.getContext().lookup(
+                    "java:global/classes/SubFileEJB");
         } catch (NamingException ex) {
             Logger.getLogger(SubmissionEJBTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -95,14 +101,16 @@ public class SubFileManagerTest {
         Submission result = subfileManager.addSubmission(name);
     }
     
-    @Test
-    public void testAddSubFileToSubmission() throws MarkESIException {
-        String subName = "submission_test";                
-        Submission result = subfileManager.addSubmission(subName);
-        String fileName = "test.java";
-        subfileManager.addSubFileToSubmission("content for test", fileName, result);
-        //assertEquals(result, );
-    }
+//    @Test
+//    public void testAddSubFileToSubmission() throws MarkESIException {
+//        String subName = "submission_test";                
+//        Submission result = subfileManager.addSubmission(subName);
+//        String fileName = "test.java";
+//        subfileManager.addSubFileToSubmission("content for test", fileName, result);
+//        result = subfileManager.getSubmissionById(result.getId());
+//        ((List)result.getSubFiles()).size();
+//        assertNotNull(((List)result.getSubFiles()).get(0));
+//    }
     
     @Test(expected = MarkESIException.class)
     public void testAddSubFileToSubmissionWithNullName() throws MarkESIException {
@@ -126,5 +134,11 @@ public class SubFileManagerTest {
         Submission result = subfileManager.addSubmission(subName);
         String fileName = "fezf*.java";
         subfileManager.addSubFileToSubmission("content for test", fileName, result);
+    }
+    
+    @Test
+    public void addRightAnnotationTest() {
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        //subfileManager.addAnnotation(file.getId(), "text", null);
     }
 }
