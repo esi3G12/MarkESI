@@ -14,13 +14,6 @@ $(document).ready(function() {
         INFO: 2
     };
 
-    function majPanel() {
-        button_add_annot.text('Ajouter l\'annotation ' + (curr_annot + 1));
-        reset();
-    }
-
-    majPanel();
-
     text_div.bind('mouseup', function() {
         newSelection();
     });
@@ -30,24 +23,23 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
-    function newSelectionObject(n_text, n_start, n_end, n_length, n_isInUse, n_annot) {
+    function newSelectionObject(n_text, n_start, n_end, n_length, n_isInUse) {
         var new_sel = {
             text: n_text,
             start: n_start,
             end: n_end,
             length: n_length,
-            isInUse: n_isInUse,
-            annotation: n_annot
+            isInUse: n_isInUse
         };
 
         return new_sel;
     }
 
     //définition de la sélection courante
-    curr_selection = newSelectionObject("", 0, 0, 0, true, curr_annot);
+    curr_selection = newSelectionObject("", 0, 0, 0, true);
 
     function copy(sel) {
-        return newSelectionObject(sel.text, sel.start, sel.end, sel.length, sel.isInUse, sel.annotation);
+        return newSelectionObject(sel.text, sel.start, sel.end, sel.length, sel.isInUse);
     }
 
     function notification(message, type) {
@@ -106,7 +98,7 @@ $(document).ready(function() {
         });
 
         //on met en évidence la sélection dans le texte
-        addClass(curr_annot, curr_id_sel, curr_selection, 'cur_sel');
+        addClass(curr_id_sel, curr_selection, 'cur_sel');
 
         //Pour finir, on incrémente l'id de la sélection courante
         curr_id_sel++;
@@ -124,7 +116,7 @@ $(document).ready(function() {
 
             if (takeoff) {
                 selections[id_of_sel].isInUse = false;
-                removeClass(id_of_sel, curr_annot);
+                removeClass(id_of_sel);
             }
 
             $(this).remove();
@@ -146,31 +138,14 @@ $(document).ready(function() {
         }
 
         //ajout de l'annotation via le FrontController
-        $.post("/MarkESI-client-web/json?action=post", {
-            "selections" : JSON.stringify(selections),
-            "annotation" : curr_annot
-        },
-        function(data) {
-            curr_annot++; //on passe à l'annotation suivante
-            curr_selection.annotation = curr_annot; //les séléctions sont maintenants destinées à l'annotation suivante
-            $('.cur_sel').removeClass().addClass('sel').addClass('sel_of_annot_' + curr_annot);
-            //on ajoute la class 'sel' aux sélections et une autre class pour avoir 
-            //toutes les sélections d'une annotations d'un coup grâce à $('.sel_of_annot' + num_annot)
-            majPanel();
-
-            notification('Annotation ' + curr_annot + ' ajout&eacute;e !', type_message.INFO);
-        }, "text");
+        $("#json").text(JSON.stringify(selections));
+        $("#sel_form").submit();
     }
 
     function setNoSelection() {
         $('.close_selection input[name=close]').each(function() {
             supprimerSelection($(this), false);
         });
-    }
-
-    function reset() {
-        annot_text.val('');
-        setNoSelection();
     }
 
     function generateDivSel() {
@@ -198,12 +173,6 @@ $(document).ready(function() {
                 error = (curr_selection.start >= selections[i].start && curr_selection.start <= selections[i].end) 
                 || (curr_selection.end >= selections[i].start && curr_selection.end <= selections[i].end) 
                 || (curr_selection.start <= selections[i].start && curr_selection.end >= selections[i].end);
-
-                if (selections[i].annotation != curr_selection.annotation && error) {
-                    //si pour 2 annotations différentes on a une sélection englobant l'autre == NON erreur
-                    error = !((curr_selection.start <= selections[i].start && curr_selection.end >= selections[i].end) 
-                        || (curr_selection.start >= selections[i].start && curr_selection.end <= selections[i].end));
-                }
             }
 
             i++;

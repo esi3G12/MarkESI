@@ -94,7 +94,7 @@ public class SubFileManager implements SubFileManagerRemote {
         SubFile file = subFileEJB.getSubFileById(fileId);
         
         Annotation annot = createAnnotationWithIntervals(text, intervals);
-        file.addAnnotation(annot);
+        subFileEJB.addAnnotation(file, annot);
     }
 
     private Annotation createAnnotationWithIntervals(String text, Collection<Interval> intervals) throws MarkESIException {
@@ -121,5 +121,10 @@ public class SubFileManager implements SubFileManagerRemote {
         annotationEJB.addIntervals(annot.getId(), intervals);
         
         return annotationEJB.findById(annot.getId());
+    }
+    
+    public String getFilePath(Long fileId) {
+        return subFileEJB.getSubFileById(fileId).getFilePath() + "/"
+                + subFileEJB.getSubFileById(fileId).getFileName();
     }
 }
