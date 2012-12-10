@@ -14,10 +14,12 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import markesi.facade.SubFileManagerRemote;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -26,11 +28,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- * 
+ *
  * @author G34784
  */
 public class FrontController extends HttpServlet {
 
+    @EJB
+    private SubFileManagerRemote subFileManager;
     private static final String PREFIX = "views/";
 
     /**
@@ -75,19 +79,20 @@ public class FrontController extends HttpServlet {
 
     private void viewFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
-        String fileName = request.getParameter("fileName");
-        
-        String fileShortName = getShortFileName(fileName);
-        
-        request.setAttribute("fileName", fileShortName);
-        request.setAttribute("title", "Fichier : " + fileShortName);
-        
-        File file = new File(fileName);
+        Long fileId = Long.parseLong(request.getParameter("fileId"));
+        String filePath = subFileManager.getFilePath(fileId);
+
+        File file = new File(filePath);
 
         if (file.exists()) {
-            FileInputStream myStream = new FileInputStream(fileName);
+            String fileShortName = getShortFileName(filePath);
+
+            request.setAttribute("fileName", fileShortName);
+            request.setAttribute("title", "Fichier : " + fileShortName);
+
+            FileInputStream myStream = new FileInputStream(filePath);
             String myString = IOUtils.toString(myStream);
-            
+
             request.setAttribute("file", StringEscapeUtils.escapeHtml(myString));
 
             List<String> viewsList = Arrays.asList("file-view.jsp");
@@ -97,16 +102,16 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    private void manageFile(HttpServletRequest request, HttpServletResponse response) 
+    private void manageFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         viewFile(request, response);
-        
+
         request.setAttribute("title", "Ajout d'annotation");
         List<String> viewsList = Arrays.asList("file-view.jsp", "add-annotation-view.jsp");
         setViewsAttribute(request, viewsList);
     }
-    
-    private void exploreFile(HttpServletRequest request, HttpServletResponse response) 
+
+    private void exploreFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         viewFile(request, response);
         request.setAttribute("title", "Vue des annontations");
@@ -173,22 +178,22 @@ public class FrontController extends HttpServlet {
         String replace = fileName.replace("\\", "/");
         String[] pathParts = replace.split("/");
         //we take the last part = just the name of the file
-        return pathParts[pathParts.length-1];
+        return pathParts[pathParts.length - 1];
     }
-    
+
     private void uploadFile(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("title", "Upload Fichier");
-        List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
+        List<String> viewsList = Arrays.asList("jtreeView.jsp", "add-file-view.jsp");
         setViewsAttribute(request, viewsList);
     }
-    
-     private void testUp(HttpServletRequest request, HttpServletResponse response) {
+
+    private void testUp(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("Upload");
 
         request.setAttribute("title", "Upload Fichier");
-        List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
+        List<String> viewsList = Arrays.asList("jtreeView.jsp", "add-file-view.jsp");
         setViewsAttribute(request, viewsList);
-        
+
         // Create a new file upload handler
         DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 

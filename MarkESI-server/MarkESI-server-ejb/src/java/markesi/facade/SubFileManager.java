@@ -122,4 +122,9 @@ public class SubFileManager implements SubFileManagerRemote {
         
         return annotationEJB.findById(annot.getId());
     }
+    
+    public String getFilePath(Long fileId) {
+        return subFileEJB.getSubFileById(fileId).getFilePath() + "/"
+                + subFileEJB.getSubFileById(fileId).getFileName();
+    }
 }
