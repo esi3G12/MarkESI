@@ -47,10 +47,12 @@ public class FrontController extends HttpServlet {
             throws ServletException, IOException {
 
         String page = "WEB-INF/index.jsp";
-
+        // vérifier connection
+        boolean connected = false;//checkConnect();
+        request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
-            if (action != null) {
+            if (connected && action != null) {
                 if (action.equals("viewFile")) {
                     viewFile(request, response);
                 } else if (action.equals("manageFile")) {
@@ -61,8 +63,11 @@ public class FrontController extends HttpServlet {
                     testUp(request, response);
                 }
             } else {
-                //No action = just index page
-                indexPage(request, response);
+                if (connected) {
+                    indexPage(request, response);
+                } else {
+                    connect(request, response);
+                }
             }
         } catch (Exception ex) {
             request.setAttribute("error", ex.getMessage());
@@ -281,5 +286,10 @@ public class FrontController extends HttpServlet {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private void connect(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "Upload Fichier");
+        setViewsAttribute(request, Arrays.asList("user-connexion-view.jsp"));
     }
 }

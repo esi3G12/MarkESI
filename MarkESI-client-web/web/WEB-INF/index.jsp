@@ -23,7 +23,7 @@
         </script>
     </head>
     <body>
-
+        <jsp:include page="views/logout-view.jsp"/>
         <%
             Collection<String> views = (Collection<String>) request.getAttribute("views");
             if (views != null) {
