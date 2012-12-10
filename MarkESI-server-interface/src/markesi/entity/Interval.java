@@ -36,10 +36,14 @@ public class Interval implements Serializable {
     @Column(name = "endPos")
     private int endPos;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "ANNOTATION", referencedColumnName = "ID")
     private Annotation annotation;
 
+    public Interval() {
+        
+    }
+    
     public Annotation getAnnotation() {
         return annotation;
     }

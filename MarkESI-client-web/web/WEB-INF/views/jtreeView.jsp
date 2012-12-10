@@ -8,7 +8,7 @@
 <script type="text/javascript">
     $(document).ready( function() {
         $('#tree').fileTree({ root: 'C:\\UserLocal\\submissions' , script: 'js/connectors/jqueryFileTree.jsp'}, function(file) {
-            window.location = "?action=viewFile&fileName="+file;
+            window.location = "?action=viewFile&fileId="+file;
         });
     });
 </script>

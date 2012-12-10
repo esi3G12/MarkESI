@@ -5,6 +5,7 @@
 package markesi.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -47,12 +48,14 @@ public class Annotation implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dateAnnot;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "SUBFILE", referencedColumnName = "ID")
     private SubFile subfile;
-    
-    
 
+    public Annotation() {
+        this.intervalCollection = new ArrayList<Interval>();
+    }
+    
     public Long getId() {
         return id;
     }

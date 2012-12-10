@@ -6,10 +6,11 @@ package markesi.test;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
+import markesi.business.AnnotationEJB;
 import markesi.business.IntervalEJB;
+import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -25,8 +26,8 @@ import static org.junit.Assert.*;
 public class IntervalEJBTest {
 
     private static EJBContainer container;
-    @EJB
-    private static IntervalEJB IntervalEJB;
+    private static IntervalEJB intervalEJB;
+    private static AnnotationEJB annotationEJB;
 
     public IntervalEJBTest() {
     }
@@ -35,8 +36,10 @@ public class IntervalEJBTest {
     public static void setUpClass() {
         container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
         try {
-            IntervalEJB = (IntervalEJB) container.getContext().lookup(
+            intervalEJB = (IntervalEJB) container.getContext().lookup(
                     "java:global/classes/IntervalEJB");
+            annotationEJB = (AnnotationEJB) container.getContext().lookup(
+                    "java:global/classes/AnnotationEJB");
         } catch (NamingException ex) {
             Logger.getLogger(SubmissionEJBTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,9 +59,9 @@ public class IntervalEJBTest {
     }
 
     @Test
-    public void addAnnotation() {
-        Interval intervalCreated = IntervalEJB.create(1,5);
-        Interval found = IntervalEJB.findById(intervalCreated.getId());
+    public void addInterval() {
+        Interval intervalCreated = intervalEJB.create(1,5);
+        Interval found = intervalEJB.findById(intervalCreated.getId());
         assertEquals(intervalCreated, found);
         assertEquals(1, found.getBegin());
         assertEquals(5, found.getEnd());
@@ -66,10 +69,38 @@ public class IntervalEJBTest {
 
     @Test
     public void testDelete() {
-        Interval ntervalReturn = IntervalEJB.create(1,5);
-        assertEquals(ntervalReturn, IntervalEJB.findById(ntervalReturn.getId()));
-        IntervalEJB.delete(ntervalReturn);
+        Interval intervalCreated = intervalEJB.create(1,5);
+        assertEquals(intervalCreated, intervalEJB.findById(intervalCreated.getId()));
+        intervalEJB.delete(intervalCreated);
         //on ne trouve plus l'annotation
-        assertNull(IntervalEJB.findById(ntervalReturn.getId()));
+        assertNull(intervalEJB.findById(intervalCreated.getId()));
+    }
+    
+    @Test
+    public void testNotIntersect() {
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(6,7);
+        assertFalse(intervalEJB.intersects(i1, i2));
+    }
+    
+    @Test
+    public void testIntersect() {
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(4,7);
+        assertTrue(intervalEJB.intersects(i1, i2));
+    }
+    
+    @Test
+    public void testIntersectTouchIntervals() {
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(5,7);
+        assertTrue(intervalEJB.intersects(i1, i2));
+    }
+    
+    @Test
+    public void testIntersectSameIntervals() {
+        Interval i1 = intervalEJB.create(1,5);
+        Interval i2 = intervalEJB.create(1,5);
+        assertTrue(intervalEJB.intersects(i1, i2));
     }
 }

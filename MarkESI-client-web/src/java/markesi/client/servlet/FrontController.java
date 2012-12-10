@@ -14,16 +14,13 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.ejb.embeddable.EJBContainer;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import markesi.entity.Submission;
+import markesi.facade.SubFileManagerRemote;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -31,16 +28,15 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
-import markesi.facade.SubFileManagerRemote;
 
 /**
  *
  * @author G34784
  */
 public class FrontController extends HttpServlet {
-   
+    
     @EJB
-    private SubFileManagerRemote facade;    
+    private SubFileManagerRemote subFileManager;
 
     /**
      * Processes requests for both HTTP
@@ -55,8 +51,7 @@ public class FrontController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String page = "WEB-INF/index.jsp";
-        //facade = (SubFileManager) 
+        String page = "WEB-INF/index.jsp";        
         try {
             String action = request.getParameter("action");
             if (action != null) {
@@ -77,21 +72,23 @@ public class FrontController extends HttpServlet {
 
     private void viewFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
-        String fileName = request.getParameter("fileName");
+        Long fileId = Long.parseLong(request.getParameter("fileId"));
+        String filePath = subFileManager.getFilePath(fileId);
 
-        String fileShortName = getShortFileName(fileName);
-
-        request.setAttribute("fileName", fileShortName);
-
-        File file = new File(fileName);
+        File file = new File(filePath);
 
         if (file.exists()) {
-            FileInputStream myStream = new FileInputStream(fileName);
+            String fileShortName = getShortFileName(filePath);
+
+            request.setAttribute("fileName", fileShortName);
+            request.setAttribute("title", "Fichier : " + fileShortName);
+
+            FileInputStream myStream = new FileInputStream(filePath);
             String myString = IOUtils.toString(myStream);
 
             request.setAttribute("file", StringEscapeUtils.escapeHtml(myString));
         } else {
-            throw new FileNotFoundException("Le fichier n'existe pas !");
+            throw new FileNotFoundException("Ce fichier n'existe pas !");
         }
     }
 
@@ -203,8 +200,8 @@ public class FrontController extends HttpServlet {
                         item.write(temp);
                         String fileContent = FileUtils.readFileToString(temp, "UTF-8");
                         //TODO choisir la submission pour l'upload
-                        Submission sub = facade.addSubmission("test");
-                        facade.addSubFileToSubmission(fileContent, fileName, sub);
+                        Submission sub = subFileManager.addSubmission("test");
+                        subFileManager.addSubFileToSubmission(fileContent, fileName, sub);
                     } else { // Streaming
                         File uploadedFile = new File(yourTempDirectory + fileName); // ou
                         // sinon
