@@ -4,10 +4,12 @@
  */
 package markesi.facade;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJBException;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.AnnotationEJB;
@@ -75,7 +77,6 @@ public class SubFileManagerTest {
      */
     @Test
     public void testAddSubmission() throws Exception {
-        System.out.println("addSubmission");
         String name = "submission_test";
         Submission result = subfileManager.addSubmission(name);
         assertEquals(subfileManager.getSubmissionById(result.getId()), result);
@@ -83,7 +84,6 @@ public class SubFileManagerTest {
 
     @Test
     public void testAddSubmissionsWithSameNames() throws MarkESIException {
-        System.out.println("addSubmission");
         String name = "submission_test";
         Submission result = subfileManager.addSubmission(name);
         Submission result2 = subfileManager.addSubmission(name);
@@ -92,21 +92,18 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void testAddSubmissionWithInvalidName() throws MarkESIException {
-        System.out.println("addSubmission");
         String name = "sub*mi\\ssion_test";
         Submission result = subfileManager.addSubmission(name);
     }
 
     @Test(expected = MarkESIException.class)
     public void testAddSubmissionWithEmptyName() throws MarkESIException {
-        System.out.println("addSubmission");
         String name = "";
         Submission result = subfileManager.addSubmission(name);
     }
 
     @Test(expected = MarkESIException.class)
     public void testAddSubmissionWithNullName() throws MarkESIException {
-        System.out.println("addSubmission");
         String name = null;
         Submission result = subfileManager.addSubmission(name);
     }
@@ -147,7 +144,7 @@ public class SubFileManagerTest {
 
     @Test
     public void addRightAnnotationTest() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         Interval interval = intervalEJB.create(10, 100);
         ArrayList<Interval> intervals = new ArrayList<Interval>();
         intervals.add(interval);
@@ -158,7 +155,7 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void addAnnotationNullTextTest() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         Interval interval = intervalEJB.create(10, 100);
         Collection<Interval> intervals = new ArrayList<Interval>();
         intervals.add(interval);
@@ -167,7 +164,7 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void addAnnotationEmptyTextTest() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         Interval interval = intervalEJB.create(10, 100);
         Collection<Interval> intervals = new ArrayList<Interval>();
         intervals.add(interval);
@@ -176,7 +173,7 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void addAnnotationNullFileTest() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         Interval interval = intervalEJB.create(10, 100);
         Collection<Interval> intervals = new ArrayList<Interval>();
         intervals.add(interval);
@@ -185,7 +182,7 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void addAnnotationNoIntervals() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         subfileManager.addAnnotation(null, "text", null);
     }
 
@@ -196,7 +193,7 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void addAnnotationWithIntersectIntervals() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         Interval interval = intervalEJB.create(10, 100);
         Interval interval2 = intervalEJB.create(11, 90);
         Collection<Interval> intervals = new ArrayList<Interval>();
@@ -207,7 +204,7 @@ public class SubFileManagerTest {
 
     @Test(expected = MarkESIException.class)
     public void addAnnotationWithGoodIntervals() throws MarkESIException {
-        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\FileTest.java");
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         Interval interval = intervalEJB.create(10, 100);
         Interval interval2 = intervalEJB.create(120, 130);
         Collection<Interval> intervals = new ArrayList<Interval>();
@@ -215,5 +212,30 @@ public class SubFileManagerTest {
         intervals.add(interval2);
         subfileManager.addAnnotation(null, "text", intervals);
         assertNotNull(((ArrayList) (file.getAnnotationCollection())).get(0));
+    }
+    
+    @Test
+    public void getFilePathTest() {
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
+        File f = new File(subfileManager.getFilePath(file.getId()));
+        System.out.println(f.getAbsolutePath());
+        assertEquals(f.getAbsolutePath(), "C:\\UserLocal\\submissions\\filename");
+    }
+    
+    @Test
+    public void getRightFilePathTest() {
+        SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
+        File f = new File(subfileManager.getFilePath(file.getId()));
+        //assertTrue(f.exists());
+    }
+    
+    @Test(expected=EJBException.class)
+    public void getNullIdFilePathTest() {
+        File f = new File(subfileManager.getFilePath(null));
+    }
+    
+    @Test(expected=EJBException.class)
+    public void getWrongIdFilePathTest() {
+        File f = new File(subfileManager.getFilePath(13l));
     }
 }
