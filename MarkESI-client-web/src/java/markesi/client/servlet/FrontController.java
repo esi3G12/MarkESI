@@ -26,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- * 
+ *
  * @author G34784
  */
 public class FrontController extends HttpServlet {
@@ -48,11 +48,11 @@ public class FrontController extends HttpServlet {
 
         String page = "WEB-INF/index.jsp";
         // vérifier connection
-        boolean connected = true;//checkConnect();
+        boolean connected = false;//checkConnect();
         request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
-            if (connected && action != null) {
+            if (action != null && (connected || action.equals("signup"))) {
                 if (action.equals("viewFile")) {
                     viewFile(request, response);
                 } else if (action.equals("manageFile")) {
@@ -61,6 +61,10 @@ public class FrontController extends HttpServlet {
                     exploreFile(request, response);
                 } else if (action.equals("uploadFile")) {
                     testUp(request, response);
+                } else if (action.equals("signup")) {
+                    signup(request, response);
+                } else if (action.equals("")) {
+                    adduser(request, response);
                 }
             } else {
                 if (connected) {
@@ -81,18 +85,18 @@ public class FrontController extends HttpServlet {
     private void viewFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         String fileName = request.getParameter("fileName");
-        
+
         String fileShortName = getShortFileName(fileName);
-        
+
         request.setAttribute("fileName", fileShortName);
         request.setAttribute("title", "Fichier : " + fileShortName);
-        
+
         File file = new File(fileName);
 
         if (file.exists()) {
             FileInputStream myStream = new FileInputStream(fileName);
             String myString = IOUtils.toString(myStream);
-            
+
             request.setAttribute("file", StringEscapeUtils.escapeHtml(myString));
 
             List<String> viewsList = Arrays.asList("file-view.jsp");
@@ -102,16 +106,16 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    private void manageFile(HttpServletRequest request, HttpServletResponse response) 
+    private void manageFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         viewFile(request, response);
-        
+
         request.setAttribute("title", "Ajout d'annotation");
         List<String> viewsList = Arrays.asList("file-view.jsp", "add-annotation-view.jsp");
         setViewsAttribute(request, viewsList);
     }
-    
-    private void exploreFile(HttpServletRequest request, HttpServletResponse response) 
+
+    private void exploreFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
         viewFile(request, response);
         request.setAttribute("title", "Vue des annontations");
@@ -161,7 +165,7 @@ public class FrontController extends HttpServlet {
     }// </editor-fold>
 
     private void indexPage(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("title", "Acceuil");
+        request.setAttribute("title", "Accueil");
         List<String> viewsList = Arrays.asList("menu-view.jsp");
         setViewsAttribute(request, viewsList);
     }
@@ -178,22 +182,22 @@ public class FrontController extends HttpServlet {
         String replace = fileName.replace("\\", "/");
         String[] pathParts = replace.split("/");
         //we take the last part = just the name of the file
-        return pathParts[pathParts.length-1];
+        return pathParts[pathParts.length - 1];
     }
-    
+
     private void uploadFile(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("title", "Upload Fichier");
-        List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
+        List<String> viewsList = Arrays.asList("jtreeView.jsp", "add-file-view.jsp");
         setViewsAttribute(request, viewsList);
     }
-    
-     private void testUp(HttpServletRequest request, HttpServletResponse response) {
+
+    private void testUp(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("Upload");
 
         request.setAttribute("title", "Upload Fichier");
-        List<String> viewsList = Arrays.asList("jtreeView.jsp","add-file-view.jsp");
+        List<String> viewsList = Arrays.asList("jtreeView.jsp", "add-file-view.jsp");
         setViewsAttribute(request, viewsList);
-        
+
         // Create a new file upload handler
         DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 
@@ -287,9 +291,19 @@ public class FrontController extends HttpServlet {
             e.printStackTrace();
         }
     }
-     
-     private void connect(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("title", "Upload Fichier");
+
+    private void connect(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "Connect");
         setViewsAttribute(request, Arrays.asList("user-connexion-view.jsp"));
+    }
+
+    private void signup(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "Connect");
+        setViewsAttribute(request, Arrays.asList("signup-view.jsp"));
+    }
+
+    private void adduser(HttpServletRequest request, HttpServletResponse response) {
+        String login="";
+        String pwd="";
     }
 }
