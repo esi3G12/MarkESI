@@ -1,7 +1,7 @@
 <div id="panel" class="big_div">
     <h2>Annotations</h2>
     <div class="padding">
-        <form id="sel_form" action="/json?action=post">
+        <form>
             Ajouter une annotation :<br/>
             <textarea id="annotation"></textarea>
             <hr/>
@@ -11,9 +11,8 @@
             </div>
             <hr/>
             <div class="align_right">
-                <button id="add_annot">Ajouter une annotation</button>
+                <button id="add_annot">Ajouter l'annotation</button>
             </div>
-            <input type="hidden" name="json" id="json"/>
         </form>
     </div>
 </div>
