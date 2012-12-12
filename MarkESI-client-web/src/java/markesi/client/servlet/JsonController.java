@@ -30,7 +30,7 @@ public class JsonController extends HttpServlet {
 
     @EJB
     private SubFileManagerRemote subFileManager;
-
+    
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -150,62 +150,45 @@ public class JsonController extends HttpServlet {
         return annots;
     }
 
-    private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String selectionsStr = request.getParameter("json");
-        Long fileId = Long.parseLong(request.getParameter("fileId"));
-        String page = null;
-
+    private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        String selectionsStr = request.getParameter("selections");
+        
+        System.out.println("post !");
+        
         if (selectionsStr == null || selectionsStr.equals("")) {
-            page = handleError(request,
-                    "Aucune sélection effectuée pour l'annotation", "Ajout annotion");
-            request.getRequestDispatcher(page).forward(request, response);
-            return;
-        } else if (fileId == null) {
-            page = handleError(request,
-                    "Aucun fichier spécifié lors de l'ajout de l'annotation", "Ajout annotion");
-            request.getRequestDispatcher(page).forward(request, response);
+            response.getWriter().write("error");
             return;
         }
-
+        
+        System.out.println("pas d'erreur");
+        
         // enlève les [] au début et à la fin :
         selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
         try {
             JSONObject selections = new JSONObject(selectionsStr);
-            createAnnotation(selections, fileId);
-            page = "WEB-INF/index.jsp";
-        } catch (MarkESIException ex) {
-            Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
-            page = handleError(request, "Une erreur s'est produite lors de l'ajout de "
-                    + "l'annotation, veuillez réessayer", "Erreur d'ajout d'annotation");
+            createAnnotation(selections);
+            response.getWriter().write("success");
         } catch (JSONException ex) {
-            Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
-            page = handleError(request, "Une erreur s'est produite lors de l'ajout de "
-                    + "l'annotation, veuillez réessayer", "Erreur d'ajout d'annotation");
+            response.getWriter().write("error");
         }
-
-        request.getRequestDispatcher(page).forward(request, response);
     }
 
-    private void createAnnotation(JSONObject selections, Long fileId) throws JSONException, MarkESIException {
+    private void createAnnotation(JSONObject selections) {
         ArrayList<Interval> list = new ArrayList<Interval>();
-        JSONArray sels = selections.getJSONArray("selections");
-        for (int i = 0; i < sels.length(); i++) {
-            if (((JSONObject) sels.get(i)).getBoolean("isInUse")) {
+        try {
+            JSONArray a = selections.getJSONArray("selections");
+            for (int i = 0; i < a.length(); i++) {
                 Interval interval = new Interval();
-                interval.setBegin(((JSONObject) sels.get(i)).getInt("start"));
-                interval.setEnd(((JSONObject) sels.get(i)).getInt("end"));
+                interval.setBegin(((JSONObject)a.get(i)).getInt("start"));
+                interval.setEnd(((JSONObject)a.get(i)).getInt("end"));
                 list.add(interval);
             }
+            subFileManager.addAnnotation(new Long(0), selections.getString("text"), list);
+        } catch (JSONException ex) {
+            System.out.println(ex);
+        } catch (MarkESIException ex) {
+            System.out.println(ex);
         }
-
-        subFileManager.addAnnotation(fileId, selections.getString("text"), list);
-    }
-
-    private String handleError(HttpServletRequest request, String ex, String exType) {
-        String page;
-        request.setAttribute("error", ex);
-        request.setAttribute("errorType", exType);
-        page = "WEB-INF/error.jsp";
-        return page;
     }
 }

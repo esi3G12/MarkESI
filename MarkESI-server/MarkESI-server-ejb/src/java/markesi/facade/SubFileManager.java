@@ -15,10 +15,12 @@ import markesi.business.AnnotationEJB;
 import markesi.business.IntervalEJB;
 import markesi.business.SubFileEJB;
 import markesi.business.SubmissionEJB;
+import markesi.business.UserEJB;
 import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import markesi.entity.SubFile;
 import markesi.entity.Submission;
+import markesi.entity.User;
 import markesi.exceptions.MarkESIException;
 
 /**
@@ -36,6 +38,10 @@ public class SubFileManager implements SubFileManagerRemote {
     private IntervalEJB intervalEJB;
     @EJB
     private AnnotationEJB annotationEJB;
+    @EJB
+    private UserEJB userEJB;
+    
+    private User user;
 
     @Override
     public Submission addSubmission(String name) throws MarkESIException {
@@ -139,8 +145,25 @@ public class SubFileManager implements SubFileManagerRemote {
         return annotationEJB.findById(annot.getId());
     }
     
+    @Override
     public String getFilePath(Long fileId) {
         return subFileEJB.getSubFileById(fileId).getFilePath() + "/"
                 + subFileEJB.getSubFileById(fileId).getFileName();
     }
+    
+    @Override
+    public void login(String username, String passwd){
+        user = userEJB.login(username, passwd);
+    }
+    
+    @Override
+    public User getUser() {
+        return user;
+    }
+    
+    @Override
+    public void inscrire(String email, String username, String password, String nom, String prenom){
+        user = userEJB.ajouter(email, username, password, nom, prenom);
+    }    
+    
 }

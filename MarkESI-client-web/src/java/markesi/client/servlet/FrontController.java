@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +34,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  * @author G34784
  */
 public class FrontController extends HttpServlet {
-    
+
     @EJB
     private SubFileManagerRemote subFileManager;
 
@@ -52,10 +51,14 @@ public class FrontController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String page = "WEB-INF/index.jsp";        
+
+        String page = "WEB-INF/index.jsp";
+        // vérifier connection
+        boolean connected = false;//checkConnect();
+        request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
-            if (action != null) {
+            if (action != null && (connected || action.equals("signup"))) {
                 if (action.equals("viewFile")) {
                     viewFile(request, response);
                 } else if (action.equals("uploadFile")) {
@@ -65,6 +68,7 @@ public class FrontController extends HttpServlet {
                     request.setAttribute("files", list);
                     page = "js/connectors/jqueryFileTree.jsp";
                 }
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -82,15 +86,15 @@ public class FrontController extends HttpServlet {
         Long fileId = Long.parseLong(request.getParameter("fileId"));
         String filePath = subFileManager.getFilePath(fileId);
 
-        File file = new File(filePath);
+        String fileShortName = getShortFileName(fileName);
+
+        request.setAttribute("fileName", fileShortName);
+        request.setAttribute("title", "Fichier : " + fileShortName);
+
+        File file = new File(fileName);
 
         if (file.exists()) {
-            String fileShortName = getShortFileName(filePath);
-
-            request.setAttribute("fileName", fileShortName);
-            request.setAttribute("title", "Fichier : " + fileShortName);
-
-            FileInputStream myStream = new FileInputStream(filePath);
+            FileInputStream myStream = new FileInputStream(fileName);
             String myString = IOUtils.toString(myStream);
 
             request.setAttribute("file", StringEscapeUtils.escapeHtml(myString));
@@ -247,5 +251,20 @@ public class FrontController extends HttpServlet {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private void connect(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "Connect");
+        setViewsAttribute(request, Arrays.asList("user-connexion-view.jsp"));
+    }
+
+    private void signup(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "Connect");
+        setViewsAttribute(request, Arrays.asList("signup-view.jsp"));
+    }
+
+    private void adduser(HttpServletRequest request, HttpServletResponse response) {
+        String login="";
+        String pwd="";
     }
 }

@@ -23,6 +23,7 @@
         </script>
     </head>
     <body>
+		<jsp:include page="views/logout-view.jsp"/>
         <jsp:include page="views/jtreeView.jsp"/>
         <jsp:include page="views/add-file-view.jsp"/>
         <% if ( request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
@@ -33,4 +34,4 @@
             %>
 
         </body>
-    </html>
+</html>
