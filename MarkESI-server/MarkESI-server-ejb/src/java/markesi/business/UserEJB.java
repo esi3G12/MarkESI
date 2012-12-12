@@ -33,7 +33,7 @@ public class UserEJB {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    public User inscrire(String email, String username, String password, String nom, String prenom) {
+    public User ajouter(String email, String username, String password, String nom, String prenom) {
         User utilisateur = new User();
         utilisateur.setUserName(username);
         utilisateur.setName(nom);
