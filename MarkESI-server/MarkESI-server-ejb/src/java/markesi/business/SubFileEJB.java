@@ -47,9 +47,12 @@ public class SubFileEJB {
         SubFile subFile = new SubFile();
         subFile.setDate(new Date());
         subFile.setFileName(fileName);
-        subFile.setFilePath(path);
-        save(content, path, fileName);
+        subFile.setFilePath(path);        
         em.persist(subFile);
+        Long Id = subFile.getId();
+        subFile.setFileName(Id + "_" + fileName);
+        em.merge(subFile);
+        save(content, path, subFile.getFileName());
         return subFile;
     }
 

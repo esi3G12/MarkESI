@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import markesi.entity.SubFile;
 import markesi.entity.Submission;
 import markesi.facade.SubFileManagerRemote;
 import org.apache.commons.fileupload.FileItem;
@@ -59,9 +60,14 @@ public class FrontController extends HttpServlet {
                     viewFile(request, response);
                 } else if (action.equals("uploadFile")) {
                     testUp(request, response);
+                } else if (action.equals("viewTree")) {  
+                    ArrayList<SubFile> list = new ArrayList<SubFile>(subFileManager.getSubFilesOfSubmission(subFileManager.getSubmissionSingle()));
+                    request.setAttribute("files", list);
+                    page = "js/connectors/jqueryFileTree.jsp";
                 }
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             request.setAttribute("error", ex.getMessage());
             request.setAttribute("errorType", ex.getClass().getName());
             page = "WEB-INF/error.jsp";
@@ -72,6 +78,7 @@ public class FrontController extends HttpServlet {
 
     private void viewFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
+        
         Long fileId = Long.parseLong(request.getParameter("fileId"));
         String filePath = subFileManager.getFilePath(fileId);
 
@@ -200,7 +207,7 @@ public class FrontController extends HttpServlet {
                         item.write(temp);
                         String fileContent = FileUtils.readFileToString(temp, "UTF-8");
                         //TODO choisir la submission pour l'upload
-                        Submission sub = subFileManager.addSubmission("test");
+                        Submission sub = subFileManager.getSubmissionSingle();
                         subFileManager.addSubFileToSubmission(fileContent, fileName, sub);
                     } else { // Streaming
                         File uploadedFile = new File(yourTempDirectory + fileName); // ou

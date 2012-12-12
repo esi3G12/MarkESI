@@ -52,6 +52,22 @@ public class SubFileManager implements SubFileManagerRemote {
     }
 
     @Override
+    public Submission getSubmissionSingle() throws MarkESIException {
+        Submission sub = submissionEJB.getOneSubmission();
+        if(sub == null){
+            return this.addSubmission("test");
+        }
+        return sub;
+    }
+    
+    @Override
+    public Collection<SubFile> getSubFilesOfSubmission(Submission sub) {
+        Collection<SubFile> c = submissionEJB.getSubFilesOfSubmission(sub);
+        c.size();
+        return c;
+    }
+    
+    @Override
     public void addSubFileToSubmission(String subFileContent, String subFileName, Submission submission) throws MarkESIException {
         testForLegalName(subFileName);
         InputStream stream = new ByteArrayInputStream(subFileContent.getBytes());

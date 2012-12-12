@@ -1,5 +1,5 @@
 <%@ page
-	import="java.io.File,java.io.FilenameFilter,java.util.Arrays"%>
+	import="java.io.File,java.io.FilenameFilter,java.util.Arrays,java.util.ArrayList,markesi.entity.SubFile"%>
 <%
 /**
   * jQuery File Tree JSP Connector
@@ -7,7 +7,7 @@
   * Copyright 2008 Joshua Gould
   * 21 April 2008
 */	
-    String dir = request.getParameter("dir");
+   /* String dir = request.getParameter("dir");
     if (dir == null) {
     	return;
     }
@@ -34,16 +34,18 @@
 				out.print("<li class=\"directory collapsed\"><a href=\"#\" rel=\"" + dir + file + "/\">"
 					+ file + "</a></li>");
 		    }
-		}
+		}*/
 		// All files
-		for (String file : files) {
-		    if (!new File(dir, file).isDirectory()) {
-				int dotIndex = file.lastIndexOf('.');
-				String ext = dotIndex > 0 ? file.substring(dotIndex + 1) : "";
-				out.print("<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\"" + dir + file + "\">"
-					+ file + "</a></li>");
-		    	}
+                out.print("<ul class=\"jqueryFileTree\" style=\"display: none;\">");
+                ArrayList<SubFile> files = (ArrayList<SubFile>) request.getAttribute("files");
+		for (SubFile file : files) {
+		    
+				int dotIndex = file.getFileName().lastIndexOf('.');
+				String ext = dotIndex > 0 ? file.getFileName().substring(dotIndex + 1) : "";
+				out.print("<li class=\"file ext_" + ext + "\"><a href=\"#\" rel=\""  + file.getId() + "\">"
+					+ file.getFileName() + "</a></li>");
+		    	
 		}
 		out.print("</ul>");
-    }
+    //}
 %>
