@@ -26,7 +26,8 @@ public interface SubFileManagerRemote {
     public void addAnnotation(Long fileId, String text, 
             Collection<Interval> intervals) throws MarkESIException;
     public String getFilePath(Long fileId);    
-    public void login(String username, String passwd);    
+    public void login(String username, String passwd) throws MarkESIException;    
     public User getUser();    
-    public void inscrire(String email, String username, String password, String nom, String prenom);   
+    public void inscrire(String email, String username, String password, 
+            String nom, String prenom)throws MarkESIException;   
 }

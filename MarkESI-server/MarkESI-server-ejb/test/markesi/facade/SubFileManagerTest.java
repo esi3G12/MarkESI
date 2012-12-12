@@ -18,6 +18,7 @@ import markesi.business.SubFileEJB;
 import markesi.entity.Interval;
 import markesi.entity.SubFile;
 import markesi.entity.Submission;
+import markesi.entity.User;
 import markesi.exceptions.MarkESIException;
 import markesi.test.SubmissionEJBTest;
 import org.junit.After;
@@ -237,5 +238,35 @@ public class SubFileManagerTest {
     @Test(expected=EJBException.class)
     public void getWrongIdFilePathTest() {
         File f = new File(subfileManager.getFilePath(13l));
+    }
+    
+    @Test(expected=MarkESIException.class)
+    public void loginUserNull() throws MarkESIException {
+        subfileManager.login(null, "test");
+    }
+    
+    @Test(expected=MarkESIException.class)
+    public void loginPasswordNull() throws MarkESIException {
+        subfileManager.login("test", null);
+    }
+    
+    @Test(expected=MarkESIException.class)
+    public void createEmailNull() throws MarkESIException {
+        subfileManager.inscrire(null, "g30000", "g30000", "nom", "prénom");
+    }
+    
+    @Test(expected=MarkESIException.class)
+    public void createLoginNull() throws MarkESIException {
+        subfileManager.inscrire("aaa@aa.com", null, "g30000", "nom", "prénom");
+    }
+    
+    @Test(expected=MarkESIException.class)
+    public void createPasswdNull() throws MarkESIException {
+        subfileManager.inscrire("aaa@aa.com", "g30000", null, "nom", "prénom");
+    }
+    
+    @Test(expected=MarkESIException.class)
+    public void createAllNull() throws MarkESIException {
+        subfileManager.inscrire(null, null, null, null, null);
     }
 }

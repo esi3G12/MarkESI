@@ -11,6 +11,7 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import markesi.entity.User;
+import markesi.exceptions.MarkESIException;
 
 /**
  *

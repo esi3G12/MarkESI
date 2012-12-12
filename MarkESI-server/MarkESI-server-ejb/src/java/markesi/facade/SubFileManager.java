@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import markesi.business.AnnotationEJB;
@@ -136,8 +138,11 @@ public class SubFileManager implements SubFileManagerRemote {
     }
     
     @Override
-    public void login(String username, String passwd){
-        user = userEJB.login(username, passwd);
+    public void login(String username, String password) throws MarkESIException{
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            throw new MarkESIException ("le username ou le password est null ou vide");
+        }
+        user = userEJB.login(username, password);
     }
     
     @Override
@@ -146,7 +151,14 @@ public class SubFileManager implements SubFileManagerRemote {
     }
     
     @Override
-    public void inscrire(String email, String username, String password, String nom, String prenom){
+    public void inscrire(String email, String username, String password, String nom, String prenom)
+                                                      throws MarkESIException{
+        if (username == null || username.isEmpty() || password == null || password.isEmpty() 
+                || email == null || email.isEmpty() || nom == null || nom.isEmpty() 
+                || prenom == null || prenom.isEmpty() ) {
+            throw new MarkESIException ("le username, le password, l'email, "
+                    + "le nom ou/et le prénom est null ou vide");
+        }
         user = userEJB.ajouter(email, username, password, nom, prenom);
     }    
     
