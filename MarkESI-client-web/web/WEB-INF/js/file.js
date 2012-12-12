@@ -1,4 +1,4 @@
-function addClass(curr_id_sel, selection, class_to_add) {
+function addClass(curr_annot, curr_id_sel, selection, class_to_add) {
     var div_content = $('#code #content'); //on met à jour div_content
     var text = div_content.html();
 
@@ -10,12 +10,12 @@ function addClass(curr_id_sel, selection, class_to_add) {
     var html_middle = text.substring(start, end);
     var html_after = text.substring(end, text.length);
     
-    var new_html = html_before + '<span id="sel_' + curr_id_sel + '" class="' + class_to_add + '">' + html_middle + '</span>' + html_after;
+    var new_html = html_before + '<span id="annot_' + curr_annot + '_sel_' + curr_id_sel + '" class="' + class_to_add + '">' + html_middle + '</span>' + html_after;
     div_content.html(new_html);
 }
     
-function removeClass(id_selection) {
-    var to_replace = $('#sel_' + id_selection);
+function removeClass(id_selection, curr_annot) {
+    var to_replace = $('#annot_' + curr_annot + '_sel_' + id_selection);
     to_replace.replaceWith(to_replace.html());
 }
 
