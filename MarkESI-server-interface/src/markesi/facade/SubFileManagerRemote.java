@@ -9,6 +9,7 @@ import javax.ejb.Remote;
 import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import markesi.entity.Submission;
+import markesi.entity.User;
 import markesi.exceptions.MarkESIException;
 
 /**
@@ -24,5 +25,8 @@ public interface SubFileManagerRemote {
             String subFileName, Submission submission) throws MarkESIException;
     public void addAnnotation(Long fileId, String text, 
             Collection<Interval> intervals) throws MarkESIException;
-    public String getFilePath(Long fileId);
+    public String getFilePath(Long fileId);    
+    public void login(String username, String passwd);    
+    public User getUser();    
+    public void inscrire(String email, String username, String password, String nom, String prenom);   
 }
