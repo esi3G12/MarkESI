@@ -52,7 +52,7 @@ public class FrontController extends HttpServlet {
 
         String page = "WEB-INF/index.jsp";
         // vérifier connection
-        boolean connected = false;//checkConnect();
+        boolean connected = true;//checkConnect();
         request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
