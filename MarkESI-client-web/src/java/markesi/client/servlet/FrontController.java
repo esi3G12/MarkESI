@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +56,7 @@ public class FrontController extends HttpServlet {
 
         String page = "WEB-INF/index.jsp";
         // vérifier connection
-        boolean connected = false;//checkConnect();
+        boolean connected = true;//checkConnect();
         request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
@@ -68,7 +70,7 @@ public class FrontController extends HttpServlet {
                     request.setAttribute("files", list);
                     page = "js/connectors/jqueryFileTree.jsp";
                 }
-
+                
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -86,15 +88,15 @@ public class FrontController extends HttpServlet {
         Long fileId = Long.parseLong(request.getParameter("fileId"));
         String filePath = subFileManager.getFilePath(fileId);
 
-        String fileShortName = getShortFileName(fileName);
+        String fileShortName = getShortFileName(filePath);
 
         request.setAttribute("fileName", fileShortName);
         request.setAttribute("title", "Fichier : " + fileShortName);
 
-        File file = new File(fileName);
+        File file = new File(filePath);
 
         if (file.exists()) {
-            FileInputStream myStream = new FileInputStream(fileName);
+            FileInputStream myStream = new FileInputStream(filePath);
             String myString = IOUtils.toString(myStream);
 
             request.setAttribute("file", StringEscapeUtils.escapeHtml(myString));
@@ -255,12 +257,12 @@ public class FrontController extends HttpServlet {
 
     private void connect(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("title", "Connect");
-        setViewsAttribute(request, Arrays.asList("user-connexion-view.jsp"));
+        //setViewsAttribute(request, Arrays.asList("user-connexion-view.jsp"));
     }
 
     private void signup(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("title", "Connect");
-        setViewsAttribute(request, Arrays.asList("signup-view.jsp"));
+        //setViewsAttribute(request, Arrays.asList("signup-view.jsp"));
     }
 
     private void adduser(HttpServletRequest request, HttpServletResponse response) {
