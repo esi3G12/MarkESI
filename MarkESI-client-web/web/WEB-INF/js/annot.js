@@ -37,7 +37,7 @@ $(document).ready(function() {
         return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
     }
     
-    $.getJSON("/MarkESI-client-web/json?action=get&fileName=" + getParameter("fileName"),
+    $.getJSON("/MarkESI-client-web/json?action=get&fileId=" + getParameter("fileId"),
         function(data){
             $.each(data, function(key, val) {
                 $.each(val, function(key, v) {

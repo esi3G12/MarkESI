@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import markesi.exceptions.MarkESIException;
 import markesi.facade.SubFileManagerRemote;
@@ -113,8 +114,8 @@ public class JsonController extends HttpServlet {
     }// </editor-fold>
 
     private void getJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String fileName = request.getParameter("fileName");
-        if (fileName != null && !fileName.equals("")) {
+        String fileId = request.getParameter("fileId");
+        if (fileId != null && !fileId.equals("")) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             PrintWriter writer = null;
@@ -122,8 +123,7 @@ public class JsonController extends HttpServlet {
                 writer = response.getWriter();
                 JSONObject json = new JSONObject();
                 try {
-                    JSONArray annots = addAnnotations();
-                    json.put("annotations", annots);
+                    json.put("annotations", addAnnotations(fileId));
 
                 } catch (JSONException ex) {
                     Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,19 +135,23 @@ public class JsonController extends HttpServlet {
         }
     }
 
-    private JSONArray addAnnotations() throws JSONException {
-        JSONArray annots = new JSONArray();
-        Collection<JSONObject> sels = new ArrayList<JSONObject>();
-        sels.add(jsonSelection(10, 15, 5));
-        sels.add(jsonSelection(20, 21, 1));
-        sels.add(jsonSelection(45, 55, 10));
-        sels.add(jsonSelection(68, 85, 17));
-        annots.put(jsonAnnotation("texte annot 1", "17/11/2012", sels));
-        sels = new ArrayList<JSONObject>();
-        sels.add(jsonSelection(35, 67, 32));
-        sels.add(jsonSelection(85, 104, 19));
-        annots.put(jsonAnnotation("texte annot 2", "17/11/2012", sels));
-        return annots;
+    private JSONArray addAnnotations(String fileId) throws JSONException {
+        Collection<Annotation> annots = subFileManager.getAnnotations(Long.parseLong(fileId));
+        JSONArray jsonAnnots = new JSONArray();
+        
+        for (Annotation annot : annots) {
+            Collection<JSONObject> sels = new ArrayList<JSONObject>();
+            
+            for (Interval interval : annot.getIntervalCollection()) {
+                JSONObject sel = jsonSelection(interval.getBegin(), interval.getEnd(), 
+                        interval.getEnd() - interval.getBegin());
+                sels.add(sel);
+            }
+            
+            jsonAnnots.put(jsonAnnotation(annot.getText(), annot.getDate().toString(), sels));
+        }
+
+        return jsonAnnots;
     }
 
     private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
