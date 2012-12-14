@@ -219,7 +219,7 @@ public class SubFileManagerTest {
         SubFile file = subFileEJB.add(null, "filename", "C:\\UserLocal\\submissions\\");
         File f = new File(subfileManager.getFilePath(file.getId()));
         System.out.println(f.getAbsolutePath());
-        assertEquals(f.getAbsolutePath(), "C:\\UserLocal\\submissions\\filename");
+        assertEquals(f.getAbsolutePath(), "C:\\UserLocal\\submissions\\"+ file.getId() +"_filename");
     }
     
     @Test
