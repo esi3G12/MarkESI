@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -28,6 +30,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "SUBMISSION")
 @XmlRootElement
+@NamedQueries({
+    @NamedQuery(name="Submission.getAll", query = "SELECT s FROM Submission s")
+})
 public class Submission implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

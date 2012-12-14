@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+/MarkESI-client-web/build/
+=======
 /MarkESI-server-interface/build/
 /MarkESI-server/MarkESI-server-ejb/build/
 /MarkESI-server-interface/dist/
@@ -6,3 +9,4 @@
 /MarkESI-client-web/build/
 /MarkESI-client-web/dist/
 /MarkESI-server/dist/
+>>>>>>> master

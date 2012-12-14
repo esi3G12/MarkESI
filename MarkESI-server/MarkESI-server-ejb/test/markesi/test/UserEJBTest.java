@@ -61,8 +61,15 @@ public class UserEJBTest {
 
     @Test
     public void inscription() {
-        User utilisateur = UserEJB.inscrire("jguerriat@gmail.com", "g30917", "g30917", "guerriat", "jérôme");
+        User utilisateur = UserEJB.ajouter("jguerriat@gmail.com", "g30917", "g30917", "guerriat", "jérôme");
         assertNotNull(utilisateur);
+    }
+    
+    @Test
+    public void login() {
+        User utilisateur = UserEJB.ajouter("jguerriat@gmail.com", "g34871", "g30917", "guerriat", "jérôme");
+        User user = UserEJB.login("g34871", "g30917");
+        assertEquals(utilisateur,user);
     }
     
     @Test

@@ -7,8 +7,9 @@
 <div id="tree"></div>
 <script type="text/javascript">
     $(document).ready( function() {
-        $('#tree').fileTree({ root: 'Z:/Test/' , script: 'js/connectors/jqueryFileTree.jsp'}, function(file) {
-            alert(file);
+        $('#tree').fileTree({ root: 'C:\\UserLocal\\submissions' , script: '?action=viewTree'}, function(file) {
+            //console.log(file);
+            window.location = "?action=viewFile&fileId="+file;
         });
     });
 </script>
