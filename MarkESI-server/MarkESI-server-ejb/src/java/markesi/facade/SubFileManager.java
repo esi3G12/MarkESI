@@ -98,7 +98,9 @@ public class SubFileManager implements SubFileManagerRemote {
     public Collection<Annotation> getAnnotations(Long subFileId) {
         SubFile file = subFileEJB.getSubFileById(subFileId);
         if (file != null) {
-            return subFileEJB.getAnnotations(file);
+            Collection<Annotation> annotations = subFileEJB.getAnnotations(file);
+            annotations.size();
+            return annotations;
         } else {
             return null;
         }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
@@ -39,8 +38,6 @@ public class FrontController extends HttpServlet {
 
     @EJB
     private SubFileManagerRemote subFileManager;
-    
-    public static String lastURL = null;
 
     /**
      * Processes requests for both HTTP
@@ -54,10 +51,7 @@ public class FrontController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        lastURL = request.getRequestURI();
-        lastURL += ((request.getQueryString()==null)? "" : "?" + request.getQueryString().toString());
-        
+
         String page = "WEB-INF/index.jsp";
         // vérifier connection
         boolean connected = true;//checkConnect();
@@ -69,12 +63,12 @@ public class FrontController extends HttpServlet {
                     viewFile(request, response);
                 } else if (action.equals("uploadFile")) {
                     testUp(request, response);
-                } else if (action.equals("viewTree")) {  
+                } else if (action.equals("viewTree")) {
                     ArrayList<SubFile> list = new ArrayList<SubFile>(subFileManager.getSubFilesOfSubmission(subFileManager.getSubmissionSingle()));
                     request.setAttribute("files", list);
                     page = "js/connectors/jqueryFileTree.jsp";
                 }
-                
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -88,7 +82,7 @@ public class FrontController extends HttpServlet {
 
     private void viewFile(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
-        
+
         Long fileId = Long.parseLong(request.getParameter("fileId"));
         String filePath = subFileManager.getFilePath(fileId);
 
@@ -270,7 +264,7 @@ public class FrontController extends HttpServlet {
     }
 
     private void adduser(HttpServletRequest request, HttpServletResponse response) {
-        String login="";
-        String pwd="";
+        String login = "";
+        String pwd = "";
     }
 }

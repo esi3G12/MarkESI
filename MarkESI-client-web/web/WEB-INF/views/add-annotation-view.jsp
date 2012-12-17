@@ -14,6 +14,8 @@
                 <button id="add_annot">Ajouter une annotation</button>
             </div>
             <input type="hidden" name="json" id="json"/>
+            <input type="hidden" name="fileId" id="fileId" 
+                   value="<%=request.getParameter("fileId")%>"/>
         </form>
     </div>
 </div>

@@ -127,6 +127,7 @@ public class JsonController extends HttpServlet {
                 } catch (JSONException ex) {
                     Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                System.out.println(json.toString());
                 writer.write(json.toString());
             } finally {
                 writer.close();
@@ -158,9 +159,8 @@ public class JsonController extends HttpServlet {
 
         if (selectionsStr != null && !selectionsStr.equals("")) {
 
-            // enlève les [] au début et à la fin :
-            //selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
             selectionsStr = "\"selections\":" + selectionsStr;
+            System.out.println(selectionsStr);
             try {
                 JSONObject selections = new JSONObject(selectionsStr);
                 createAnnotation(selections);
@@ -169,7 +169,8 @@ public class JsonController extends HttpServlet {
             }
         }
         
-        request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
+        request.getRequestDispatcher("/Front?action=viewFile&fileId=" 
+                + request.getParameter("fileId")).forward(request, response);
     }
 
     private void createAnnotation(JSONObject selections) {
