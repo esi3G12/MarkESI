@@ -5,7 +5,6 @@ $(document).ready(function() {
     var button_add_annot = $('#add_annot');
     var no_selection_div = $('#no_selection');
     var curr_selection;
-    var curr_annot = 0;
     var selections = new Array();
     var curr_id_sel = 0;
     var type_message = {
@@ -72,16 +71,16 @@ $(document).ready(function() {
             curr_selection.end = sel.end;
             curr_selection.length = sel.end - sel.start;
             text_div.selection(0, 0); //désélectionne la sélection courante
-            if (!selectionEstCorrecte(curr_selection)) {
+            if (!isSelectionCorrect(curr_selection)) {
                 //traitement en cas d'erreur
                 notification('Cette s&eacute;lection n\'est pas valide !', type_message.ERROR);
             } else {
-                ajouteSelection();
+                addSelection();
             }
         }
     }
 
-    function ajouteSelection() {
+    function addSelection() {
         if (aucuneSelection()) {
             no_selection_div.hide();
         }
@@ -159,11 +158,10 @@ $(document).ready(function() {
         return sel_div;
     }
 
-    function selectionEstCorrecte(curr_selection) {
+    function isSelectionCorrect(curr_selection) {
         if (curr_selection.text.match(/^ +$/))
             return false;
         
-        selection_est_englobante = false;
         var error = false;
         var i = 0;
         while (!error && i < selections.length) {

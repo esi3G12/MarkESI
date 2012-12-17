@@ -173,7 +173,7 @@ public class SubFileManager implements SubFileManagerRemote {
             throw new MarkESIException ("le username, le password, l'email, "
                     + "le nom ou/et le prénom est null ou vide");
         }
-        userEJB.ajouter(email, username, password, nom, prenom);
+        userEJB.add(email, username, password, nom, prenom);
     }    
 
     @Override

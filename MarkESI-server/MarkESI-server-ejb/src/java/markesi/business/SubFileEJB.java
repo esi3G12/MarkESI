@@ -98,6 +98,10 @@ public class SubFileEJB {
         em.merge(fileIn);
         em.merge(annot);
     }
+    
+    
+    
+    
 
     public Collection<Annotation> getAnnotations(SubFile file) {
         return file.getAnnotationCollection();
