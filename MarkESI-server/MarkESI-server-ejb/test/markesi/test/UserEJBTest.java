@@ -60,22 +60,29 @@ public class UserEJBTest {
     }
 
     @Test
-    public void inscription() {
-        User utilisateur = UserEJB.ajouter("jguerriat@gmail.com", "g30917", "g30917", "guerriat", "jérôme");
+    public void subscribeOK() {
+        User utilisateur = UserEJB.add("jguerriat@gmail.com", "g30917", "g30917", "guerriat", "jérôme");
         assertNotNull(utilisateur);
     }
     
     @Test
-    public void login() {
-        User utilisateur = UserEJB.ajouter("jguerriat@gmail.com", "g34871", "g30917", "guerriat", "jérôme");
+    public void loginOK() {
+        User utilisateur = UserEJB.add("jguerriat@gmail.com", "g34871", "g30917", "guerriat", "jérôme");
         User user = UserEJB.login("g34871", "g30917");
         assertEquals(utilisateur,user);
     }
     
     @Test
-    public void raf(){
-        assertTrue(true);
+    public void loginOKSpecialCharacters() {
+        User utilisateur = UserEJB.add("'(§'(13@gmail.com", "'(§'(13", "g30917", "guerriat", "jérôme");
+        assertNotNull(utilisateur);
     }
-
+    
+    @Test
+    public void subscribeOKSpecialCharacters() {
+        User utilisateur = UserEJB.add("'(§'(13@gmail.com", "§!156", "g30917", "guerriat", "jérôme");
+        User user = UserEJB.login("§!156", "g30917");
+        assertEquals(utilisateur,user);
+    }
 
 }

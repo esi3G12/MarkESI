@@ -163,7 +163,7 @@ public class SubFileManager implements SubFileManagerRemote {
     
     @Override
     public void inscrire(String email, String username, String password, String nom, String prenom){
-        user = userEJB.ajouter(email, username, password, nom, prenom);
+        user = userEJB.add(email, username, password, nom, prenom);
     }    
     
 }
