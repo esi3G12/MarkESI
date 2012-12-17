@@ -6,9 +6,9 @@
 <div id="tree"></div>
 <script type="text/javascript">
     $(document).ready( function() {
-        $('#tree').fileTree({ root: 'C:\\UserLocal\\submissions' , script: '?action=viewTree', expandSpeed: -1}, function(file) {
+        $('#tree').fileTree({ root: 'C:\\UserLocal\\submissions' , script: 'Front?action=viewTree', expandSpeed: -1}, function(file) {
             //console.log(file);
-            window.location = "?action=viewFile&fileId="+file;
+            window.location = "Front?action=viewFile&fileId="+file;
         });
     });
 </script>

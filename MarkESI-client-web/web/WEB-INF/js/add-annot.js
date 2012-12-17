@@ -13,6 +13,10 @@ $(document).ready(function() {
         INFO: 2
     };
 
+    annot_text.bind('mouseup', function() {
+        clearHighlights();
+    });
+    
     text_div.bind('mouseup', function() {
         newSelection();
     });
@@ -21,6 +25,10 @@ $(document).ready(function() {
         ajouterAnnotation();
         event.preventDefault();
     });
+
+    function clearHighlights() {
+        text_div.html(text_div.text());
+    }
 
     function newSelectionObject(n_text, n_start, n_end, n_length, n_isInUse) {
         var new_sel = {
