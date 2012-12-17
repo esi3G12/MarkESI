@@ -168,39 +168,22 @@ public class FrontController extends HttpServlet {
     private void testUp(HttpServletRequest request, HttpServletResponse response) {
         // Create a new file upload handler
         DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
-
         ServletFileUpload upload = new ServletFileUpload(fileItemFactory);
-
-        // Set upload parameters
-        int yourMaxMemorySize = 512 * 1024 * 8; // en bytes
+        int yourMaxMemorySize = 512 * 1024 * 8; 
         int yourMaxRequestSize = 1024 * 1024 * 8;
-        String yourTempDirectory = "Z:\\Test\\"; // un répertoire ou tomcat
-        // a
-        // le droit d'écrire
-
+        String yourTempDirectory = "Z:\\Test\\"; 
         fileItemFactory.setSizeThreshold(yourMaxMemorySize);
-
-        // upload.setSizeThreshold(yourMaxMemorySize);
         upload.setSizeMax(yourMaxRequestSize);
-        // upload.setRepositoryPath(yourTempDirectory);
-
-        // Parse the request -on recupère tous les champs du formulaire
         List items;
         try {
             items = upload.parseRequest(request);
-
-            // Process the uploaded items
             Iterator iter = items.iterator();
             while (iter.hasNext()) {
-
                 FileItem item = (FileItem) iter.next();
-
-                // Process a regular form field
                 if (item.isFormField()) {
                     String name = item.getFieldName();
                     String value = item.getString();
-
-                } // Process a file upload
+                } 
                 else {
                     String fieldName = item.getFieldName();
                     String fileName = item.getName();
@@ -209,26 +192,18 @@ public class FrontController extends HttpServlet {
                     long sizeInBytes = item.getSize();
 
                     boolean writeToFile = true;
-                    // Copie directe pour les petits fichiers, sinon streaming (le
-                    // streaming ne marche pas)
                     if (sizeInBytes > 512 * 1024 * 8) {
                         writeToFile = false;
                     }
-
-                    // Process a file upload
-                    if ((writeToFile) & (fieldName.equals("source"))) { // Ecriture directe
-                        System.out.println("Ecriture directe");
-                        //File uploadedFile = new File(yourTempDirectory + fileName);                        
-                        //item.write(uploadedFile);
+                    if ((writeToFile) & (fieldName.equals("source"))) { 
                         File temp = File.createTempFile(fileName, "");
                         temp.deleteOnExit();
                         item.write(temp);
                         String fileContent = FileUtils.readFileToString(temp, "UTF-8");
-                        //TODO choisir la submission pour l'upload
                         Submission sub = subFileManager.getSubmissionSingle();
                         subFileManager.addSubFileToSubmission(fileContent, fileName, sub);
-                    } else { // Streaming
-                        File uploadedFile = new File(yourTempDirectory + fileName); // ou
+                    } /*else { // Streaming
+                        File uploadedFile = new File(yourTempDirectory + fileName); 
                         // sinon
                         // un	nouveau nom de fichier à la place de fileName
                         InputStream sourceFile;
@@ -255,7 +230,7 @@ public class FrontController extends HttpServlet {
                             e.printStackTrace();
                         }
                     }
-
+*/
                 }
             }
         } catch (FileUploadException e) {
@@ -267,16 +242,13 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    private String connect(HttpServletRequest request, HttpServletResponse response) {
+    private String connect(HttpServletRequest request, HttpServletResponse response) throws MarkESIException {
         request.setAttribute("title", "Connect");
-        try {
+        
             subFileManager.login(request.getParameter("login"), request.getParameter("pass"));
             request.setAttribute("connected", true);
             return "WEB-INF/index.jsp";
-        } catch (MarkESIException e) {
-            e.printStackTrace();
-            return "WEB-INF/error.jsp";
-        }
+        
     }
 
     private void deco(HttpServletRequest request, HttpServletResponse response) {
@@ -292,7 +264,8 @@ public class FrontController extends HttpServlet {
             String nom = request.getParameter("nom");
             String prenom = request.getParameter("prenom");
             subFileManager.inscrire(email, login, passw, nom, prenom);
-            subFileManager.login(login, passw);
+          //  subFileManager.login(login, passw);
+          //  request.setAttribute("connected", true);
         } catch (MarkESIException ex) {
             Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, ex);
         }
