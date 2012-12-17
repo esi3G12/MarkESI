@@ -29,7 +29,8 @@ public interface SubFileManagerRemote {
     public String getFilePath(Long fileId);
     public Submission getSubmissionSingle() throws MarkESIException;
     public Collection<SubFile> getSubFilesOfSubmission(Submission sub);    
-    public void login(String username, String passwd);    
+    public void login(String username, String passwd) throws MarkESIException;    
     public User getUser();    
-    public void inscrire(String email, String username, String password, String nom, String prenom);   
+    public void inscrire(String email, String username, String password, String nom, String prenom)throws MarkESIException;  
+    public void logout() ;
 }

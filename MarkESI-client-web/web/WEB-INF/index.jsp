@@ -21,6 +21,8 @@
         </script>
     </head>
     <body>
+        <% if ((Boolean) request.getAttribute("connected") == true) {
+        %>
         <jsp:include page="views/logout-view.jsp"/>
         <jsp:include page="views/jtreeView.jsp"/>
         <jsp:include page="views/add-file-view.jsp"/>
@@ -30,7 +32,8 @@
         <jsp:include page = "views/annotation-view.jsp" />
         <jsp:include page = "views/add-annotation-view.jsp" />
         <%            }
-        %>
-
+        } else {%>
+        <jsp:include page = "views/user-connexion-view.jsp" />
+        <%}%>
     </body>
 </html>

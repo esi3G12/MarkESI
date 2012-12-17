@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import markesi.entity.SubFile;
 import markesi.entity.Submission;
+import markesi.exceptions.MarkESIException;
 import markesi.facade.SubFileManagerRemote;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -54,21 +57,31 @@ public class FrontController extends HttpServlet {
 
         String page = "WEB-INF/index.jsp";
         // vérifier connection
-        boolean connected = true;//checkConnect();
+        boolean connected = subFileManager.getUser() != null;//checkConnect();
         request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
-            if (action != null && (connected || action.equals("signup"))) {
-                if (action.equals("viewFile")) {
-                    viewFile(request, response);
-                } else if (action.equals("uploadFile")) {
-                    testUp(request, response);
-                } else if (action.equals("viewTree")) {
-                    ArrayList<SubFile> list = new ArrayList<SubFile>(subFileManager.getSubFilesOfSubmission(subFileManager.getSubmissionSingle()));
-                    request.setAttribute("files", list);
-                    page = "js/connectors/jqueryFileTree.jsp";
+            if (action != null) {
+                if (connected || action.equals("signup") || action.equals("adduser")) {
+                    if (action.equals("viewFile")) {
+                        viewFile(request, response);
+                    } else if (action.equals("uploadFile")) {
+                        testUp(request, response);
+                    } else if (action.equals("viewTree")) {
+                        ArrayList<SubFile> list = new ArrayList<SubFile>(subFileManager.getSubFilesOfSubmission(subFileManager.getSubmissionSingle()));
+                        request.setAttribute("files", list);
+                        page = "js/connectors/jqueryFileTree.jsp";
+                    } else if (action.equals("signup")) {
+                        page = "WEB-INF/views/signup-view.jsp";
+                    } else if (action.equals("adduser")) {
+                        addUser(request, response);
+                    } else if (action.equals("deco")) {
+                        deco(request, response);
+                        request.setAttribute("connected", false);
+                    }
+                } else if (action.equals("connexion")) {
+                    page = connect(request, response);
                 }
-
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -253,18 +266,34 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    private void connect(HttpServletRequest request, HttpServletResponse response) {
+    private String connect(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("title", "Connect");
-        //setViewsAttribute(request, Arrays.asList("user-connexion-view.jsp"));
+        try {
+            subFileManager.login(request.getParameter("login"), request.getParameter("pass"));
+            request.setAttribute("connected", true);
+            return "WEB-INF/index.jsp";
+        } catch (MarkESIException e) {
+            e.printStackTrace();
+            return "WEB-INF/error.jsp";
+        }
     }
 
-    private void signup(HttpServletRequest request, HttpServletResponse response) {
-        request.setAttribute("title", "Connect");
-        //setViewsAttribute(request, Arrays.asList("signup-view.jsp"));
+    private void deco(HttpServletRequest request, HttpServletResponse response) {
+        subFileManager.logout();
     }
 
-    private void adduser(HttpServletRequest request, HttpServletResponse response) {
-        String login = "";
-        String pwd = "";
+    private void addUser(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("title", "New user");
+        try {
+            String email = request.getParameter("email");
+            String login = request.getParameter("login");
+            String passw = request.getParameter("pass");
+            String nom = request.getParameter("nom");
+            String prenom = request.getParameter("prenom");
+            subFileManager.inscrire(email, login, passw, nom, prenom);
+            subFileManager.login(login, passw);
+        } catch (MarkESIException ex) {
+            Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
