@@ -41,7 +41,8 @@ public class User implements Serializable {
     @Column(name = "PASSWORD")
     private String password;
     @Basic(optional = false)
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL",
+            unique = true)
     private String email;
 
     public Collection<Submission> getSubmissionCollection() {
