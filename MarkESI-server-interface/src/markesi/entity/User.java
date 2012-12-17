@@ -5,10 +5,14 @@
 package markesi.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -23,8 +27,9 @@ public class User implements Serializable {
     @Id
     @Column(name = "username")
     private String userName;
-    // @OneToMany(cascade = CascadeType.ALL, mappedBy = "submission")
-    //private Collection<Submission> submissionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "submission")
+    @Basic(optional = true)
+    private Collection<Submission> submissionCollection;
     @Basic(optional = false)
     @Column(name = "NAME")
     private String name;
@@ -38,15 +43,22 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "EMAIL")
     private String email;
-    /*
-     public Collection<Submission> getSubmissionCollection() {
-     return submissionCollection;
-     }
 
-     public void setSubmissionCollection(Collection<Submission> submissionCollection) {
-     this.submissionCollection = submissionCollection;
-     }
-     * */
+    public Collection<Submission> getSubmissionCollection() {
+        return submissionCollection;
+    }
+
+    public void setSubmissionCollection(Collection<Submission> submissionCollection) {
+        this.submissionCollection = submissionCollection;
+    }
+
+    public void addSubmission(Submission toAdd) {
+        if(this.submissionCollection==null){
+            this.submissionCollection = new ArrayList<Submission>();
+        }
+        this.submissionCollection.add(toAdd);
+        
+    }
 
     public String getUserName() {
         return userName;
