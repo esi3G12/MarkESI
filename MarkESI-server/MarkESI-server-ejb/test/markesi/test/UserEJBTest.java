@@ -4,9 +4,11 @@
  */
 package markesi.test;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.SubmissionEJB;
@@ -73,22 +75,30 @@ public class UserEJBTest {
 
     @Test
     public void loginOK() {
-        User utilisateur = UserEJB.add("jguerriat@gmail.com", "g34871", "g30917", "guerriat", "jérôme");
+        User utilisateur = UserEJB.add("jguerriat2@gmail.com", "g34871", "g30917", "guerriat", "jérôme");
         User user = UserEJB.login("g34871", "g30917");
         assertEquals(utilisateur, user);
     }
 
     @Test
     public void loginOKSpecialCharacters() {
-        User utilisateur = UserEJB.add("'(§'(13@gmail.com", "'(§'(13", "g30917", "guerriat", "jérôme");
+        User utilisateur = UserEJB.add("'(§'(133@gmail.com", "'(§'(13", "g30917", "guerriat", "jérôme");
         assertNotNull(utilisateur);
     }
 
     @Test
     public void subscribeOKSpecialCharacters() {
-        User utilisateur = UserEJB.add("'(§'(13@gmail.com", "§!156", "g30917", "guerriat", "jérôme");
-        User user = UserEJB.login("§!156", "g30917");
+        User utilisateur = UserEJB.add("'(§'(135@gmail.com", "§!156", "((((()))))", "guerriat", "jérôme");
+        User user = UserEJB.login("§!156", "((((()))))");
         assertEquals(utilisateur, user);
+    }
+
+    @Test(expected=EJBException.class)
+    public void subscribeOnlyOnce() {
+        User utilisateur = UserEJB.add("jguerriat5@gmail.com", "sryj", "aaaa", "guerriat", "jérôme");
+        //cette ligne doit creer une violation de la contrainte d'email 
+        User utilisateur2 = UserEJB.add("jguerriat5@gmail.com", "user2", "aaaa", "guerriat", "jérôme"); 
+        assertNull(UserEJB.login("user2", "aaaa"));
     }
 
     @Test
@@ -100,14 +110,13 @@ public class UserEJBTest {
         assertEquals(passwordMD5, user.getPassword());
     }
 
-    @Test
     public void subScribeAndAddSubmission() {
         try {
             User utilisateur = UserEJB.add("b@b.com", "b", "b", "b", "b");
 
             Submission submission = submissionEJB.addSubmission("test");
             UserEJB.addSubmission(utilisateur, submission);
-            
+
             User user = UserEJB.login("b", "b");
             assertEquals(user.getSubmissionCollection().size(), 1);
 
@@ -115,7 +124,5 @@ public class UserEJBTest {
             //on ne doit pas catcher d'exception...
             assertTrue(false);
         }
-
-
     }
 }
