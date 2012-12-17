@@ -40,7 +40,6 @@ public class SubFileManager implements SubFileManagerRemote {
     private AnnotationEJB annotationEJB;
     @EJB
     private UserEJB userEJB;
-    
     private User user;
 
     @Override
@@ -60,19 +59,19 @@ public class SubFileManager implements SubFileManagerRemote {
     @Override
     public Submission getSubmissionSingle() throws MarkESIException {
         Submission sub = submissionEJB.getOneSubmission();
-        if(sub == null){
+        if (sub == null) {
             return this.addSubmission("test");
         }
         return sub;
     }
-    
+
     @Override
     public Collection<SubFile> getSubFilesOfSubmission(Submission sub) {
         Collection<SubFile> c = submissionEJB.getSubFilesOfSubmission(sub);
         c.size();
         return c;
     }
-    
+
     @Override
     public void addSubFileToSubmission(String subFileContent, String subFileName, Submission submission) throws MarkESIException {
         testForLegalName(subFileName);
@@ -107,6 +106,18 @@ public class SubFileManager implements SubFileManagerRemote {
     }
 
     @Override
+    public Collection<Interval> getIntervals(Long annotationId) {
+        Annotation annot = annotationEJB.findById(annotationId);
+        if (annot != null) {
+            Collection<Interval> intervals = annotationEJB.getIntervals(annot);
+            intervals.size();
+            return intervals;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public void addAnnotation(Long fileId, String text, Collection<Interval> intervals)
             throws MarkESIException {
         if (fileId == null) {
@@ -114,9 +125,9 @@ public class SubFileManager implements SubFileManagerRemote {
         } else if (text == null || text.equals("")) {
             throw new MarkESIException("aucun texte n'a été écrit pour l'annotation");
         }
-        
+
         SubFile file = subFileEJB.getSubFileById(fileId);
-        
+
         Annotation annot = createAnnotationWithIntervals(text, intervals);
         subFileEJB.addAnnotation(file, annot);
     }
@@ -140,47 +151,46 @@ public class SubFileManager implements SubFileManagerRemote {
         if (isIncorrect) {
             throw new MarkESIException("Il y a des intersections dans les sélections");
         }
-        
+
         Annotation annot = annotationEJB.create(text);
         annotationEJB.addIntervals(annot.getId(), intervals);
-        
+
         return annotationEJB.findById(annot.getId());
     }
-    
+
     @Override
     public String getFilePath(Long fileId) {
         return subFileEJB.getSubFileById(fileId).getFilePath() + "/"
                 + subFileEJB.getSubFileById(fileId).getFileName();
     }
-    
+
     @Override
     public void login(String username, String passwd) throws MarkESIException {
-        if (username == null || username.isEmpty() || passwd == null || passwd.isEmpty()){
+        if (username == null || username.isEmpty() || passwd == null || passwd.isEmpty()) {
             throw new MarkESIException("le username ou le password est invalide");
         }
         user = userEJB.login(username, passwd);
     }
-    
+
     @Override
     public User getUser() {
         return user;
     }
-    
-     @Override
+
+    @Override
     public void inscrire(String email, String username, String password, String nom, String prenom)
-                                                      throws MarkESIException{
-        if (username == null || username.isEmpty() || password == null || password.isEmpty() 
-                || email == null || email.isEmpty() || nom == null || nom.isEmpty() 
-                || prenom == null || prenom.isEmpty() ) {
-            throw new MarkESIException ("le username, le password, l'email, "
+            throws MarkESIException {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()
+                || email == null || email.isEmpty() || nom == null || nom.isEmpty()
+                || prenom == null || prenom.isEmpty()) {
+            throw new MarkESIException("le username, le password, l'email, "
                     + "le nom ou/et le prénom est null ou vide");
         }
         userEJB.add(email, username, password, nom, prenom);
-    }    
+    }
 
     @Override
     public void logout() {
-        this.user=null;
+        this.user = null;
     }
-    
 }

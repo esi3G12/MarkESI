@@ -22,6 +22,7 @@ public interface SubFileManagerRemote {
     public Submission addSubmission(String name) throws MarkESIException;
     public Submission getSubmissionById(Long id);
     public Collection<Annotation> getAnnotations(Long subFileId);
+    public Collection<Interval> getIntervals(Long annotationId);
     public void addSubFileToSubmission(String subFileContent, 
             String subFileName, Submission submission) throws MarkESIException;
     public void addAnnotation(Long fileId, String text, 

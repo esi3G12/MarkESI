@@ -36,12 +36,12 @@
         </div>
         <% if (request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
         %>
-        <div id="center">
-            <jsp:include page = "views/file-view.jsp" />
-        </div>
         <div id="right">
             <jsp:include page = "views/annotation-view.jsp" />
             <jsp:include page = "views/add-annotation-view.jsp" />
+        </div>
+        <div id="center">
+            <jsp:include page = "views/file-view.jsp" />
         </div>
         <% }
         } else if (isSigningUp != null && isSigningUp == true) {%>

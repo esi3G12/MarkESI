@@ -142,7 +142,7 @@ public class JsonController extends HttpServlet {
         for (Annotation annot : annots) {
             Collection<JSONObject> sels = new ArrayList<JSONObject>();
 
-            for (Interval interval : annot.getIntervalCollection()) {
+            for (Interval interval : subFileManager.getIntervals(annot.getId())) {
                 JSONObject sel = jsonSelection(interval.getBegin(), interval.getEnd(),
                         interval.getEnd() - interval.getBegin());
                 sels.add(sel);
@@ -156,24 +156,25 @@ public class JsonController extends HttpServlet {
 
     private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String selectionsStr = request.getParameter("json");
+        String fileId = request.getParameter("fileId");
 
         if (selectionsStr != null && !selectionsStr.equals("")) {
 
-            selectionsStr = "\"selections\":" + selectionsStr;
+            selectionsStr = "{\"selections\":" + selectionsStr + "}";
             System.out.println(selectionsStr);
             try {
                 JSONObject selections = new JSONObject(selectionsStr);
-                createAnnotation(selections);
+                createAnnotation(selections, fileId, request.getParameter("annotation"));
             } catch (JSONException ex) {
-                ;
+                Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         request.getRequestDispatcher("/Front?action=viewFile&fileId=" 
-                + request.getParameter("fileId")).forward(request, response);
+                + fileId).forward(request, response);
     }
 
-    private void createAnnotation(JSONObject selections) {
+    private void createAnnotation(JSONObject selections, String fileId, String text) {
         ArrayList<Interval> list = new ArrayList<Interval>();
         try {
             JSONArray a = selections.getJSONArray("selections");
@@ -183,7 +184,7 @@ public class JsonController extends HttpServlet {
                 interval.setEnd(((JSONObject) a.get(i)).getInt("end"));
                 list.add(interval);
             }
-            subFileManager.addAnnotation(new Long(0), selections.getString("text"), list);
+            subFileManager.addAnnotation(Long.parseLong(fileId), text, list);
         } catch (JSONException ex) {
             System.out.println(ex);
         } catch (MarkESIException ex) {

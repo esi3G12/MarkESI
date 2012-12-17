@@ -59,4 +59,8 @@ public class AnnotationEJB {
         em.merge(annot);
         em.merge(intervalToAdd);
     }
+
+    public Collection<Interval> getIntervals(Annotation annot) {
+        return annot.getIntervalCollection();
+    }
 }

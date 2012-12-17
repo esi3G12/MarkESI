@@ -5,8 +5,8 @@ body {
 }
 
 #left, #right {
-    width: 25%;
-    max-width: 25%;
+    width: 23%;
+    max-width: 23%;
 }
 
 #left {
@@ -18,8 +18,9 @@ body {
 }
 
 #center {
-    width: 50%;
-    max-width: 50%;
+    width: 52%;
+    max-width: 52%;
+    margin-left: 24%;
 }
 
 h2 {
@@ -103,20 +104,25 @@ p {
     padding: 10px;
 }
 
+#panel {
+    margin-bottom: 10px;
+}
+
 #file_panel {
     font-family: monospace, sans-serif;
     font-size: 0px;
-    width: 50%;
-    max-width: 50%;
+    width: 100%;
+    max-width: 100%;
 }
 
 #file {
     line-height: 1.3em;
     border-collapse: collapse;
-    overflow-x: auto;
+    overflow: auto;
     font-size: 14px;
-    width: 50%;
-    max-width: 50%;
+    width: 100%;
+    max-height: 700px;
+    display: inline-block;
 }
 
 #file #nums {
@@ -151,6 +157,8 @@ textarea {
     width: 100%;
     padding: 5px;
     box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     height: 80px;
     resize: vertical;
     font-size: 14px;
@@ -230,6 +238,48 @@ input[type=submit] {
     border: 1px solid #CCC;
     padding: 3px;
     color: #555;
+}
+
+.master_form {
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.master_form input[type=text], 
+.master_form input[type=password],
+.master_form input[type=email]{
+    width: 200px;
+}
+
+.requis {
+    color: red;
+}
+
+.signup, #connexion input[type=submit] {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#connexion input[type=submit] {
+    float: right;
+}
+
+.master_form .form_part {
+    width: 350px;
+    margin-bottom: 5px;
+}
+
+.master_form .form_part:last-of-type {
+    margin-bottom: 15px;
+}
+
+.master_form label {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    padding-right: 10px;
 }
 
 fieldset {
