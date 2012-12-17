@@ -93,11 +93,11 @@ public class UserEJBTest {
         assertEquals(utilisateur, user);
     }
 
-    @Test(expected=EJBException.class)
+    @Test(expected = EJBException.class)
     public void subscribeOnlyOnce() {
         User utilisateur = UserEJB.add("jguerriat5@gmail.com", "sryj", "aaaa", "guerriat", "jérôme");
         //cette ligne doit creer une violation de la contrainte d'email 
-        User utilisateur2 = UserEJB.add("jguerriat5@gmail.com", "user2", "aaaa", "guerriat", "jérôme"); 
+        User utilisateur2 = UserEJB.add("jguerriat5@gmail.com", "user2", "aaaa", "guerriat", "jérôme");
         assertNull(UserEJB.login("user2", "aaaa"));
     }
 
@@ -110,19 +110,11 @@ public class UserEJBTest {
         assertEquals(passwordMD5, user.getPassword());
     }
 
-    public void subScribeAndAddSubmission() {
-        try {
-            User utilisateur = UserEJB.add("b@b.com", "b", "b", "b", "b");
-
-            Submission submission = submissionEJB.addSubmission("test");
-            UserEJB.addSubmission(utilisateur, submission);
-
-            User user = UserEJB.login("b", "b");
-            assertEquals(user.getSubmissionCollection().size(), 1);
-
-        } catch (MarkESIException ex) {
-            //on ne doit pas catcher d'exception...
-            assertTrue(false);
-        }
+    public void subScribeAndAddSubmission() throws MarkESIException {
+        User utilisateur = UserEJB.add("b@b.com", "b", "b", "b", "b");
+        Submission submission = submissionEJB.addSubmission("test");
+        UserEJB.addSubmission(utilisateur, submission);
+        User user = UserEJB.login("b", "b");
+        assertEquals(user.getSubmissionCollection().size(), 1);
     }
 }
