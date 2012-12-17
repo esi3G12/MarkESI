@@ -4,6 +4,24 @@ body {
     background: #F0F0F0;
 }
 
+#left, #right {
+    width: 25%;
+    max-width: 25%;
+}
+
+#left {
+    float: left;
+}
+
+#right {
+    float: right;
+}
+
+#center {
+    width: 50%;
+    max-width: 50%;
+}
+
 h2 {
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
@@ -77,16 +95,6 @@ pre {
 p {
     padding: 10px;
 }
-
-#panel, #file_panel {
-    display: inline-block;
-    vertical-align: top;
-}
-
-#panel {
-    width: 35%;
-}
-
 .padding {
     padding: 10px;
 }
@@ -96,20 +104,19 @@ p {
 }
 
 #file_panel {
-    width: 60%;
-    max-width: 60%;
-    margin-right: 1%;
     font-family: monospace, sans-serif;
     font-size: 0px;
+    width: 50%;
+    max-width: 50%;
 }
 
 #file {
-    display: inline-block;
     line-height: 1.3em;
     border-collapse: collapse;
     overflow-x: auto;
-    width: 100%;
     font-size: 14px;
+    width: 50%;
+    max-width: 50%;
 }
 
 #file #nums {
@@ -225,7 +232,19 @@ input[type=submit] {
     color: #555;
 }
 
-button {
+fieldset {
+    border: 1px solid #aaa;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+}
+
+hr {
+    color: #fff;
+    background: #fff;
+}
+
+button, .button, input[type=submit] {
     cursor: pointer;
     -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
     -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -248,14 +267,14 @@ button {
     text-shadow:1px 1px 0px #ffffff;
 }
 
-button:hover {
+button:hover, .button:hover, input[type=submit]:hover {
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
     background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
     background-color:#dfdfdf;
 }
 
-button:active {
+button:active, .button:active, input[type=submit]:active {
     position:relative;
     top:1px;
 }

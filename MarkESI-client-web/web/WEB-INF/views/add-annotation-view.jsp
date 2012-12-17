@@ -1,5 +1,5 @@
 <div id="panel" class="big_div">
-    <h2>Annotations</h2>
+    <h2>Ajout d'annotations</h2>
     <div class="padding">
         <form id="sel_form" action="/MarkESI-client-web/json?action=post" method="POST">
             Ajouter une annotation :<br/>

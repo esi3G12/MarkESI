@@ -21,18 +21,32 @@
         </script>
     </head>
     <body>
-        <% if ((Boolean) request.getAttribute("connected") == true) {
+        <% Boolean isSigningUp = (Boolean) request.getAttribute("isSigningUp");
+            if ((Boolean) request.getAttribute("connected") == true) {
         %>
-        <jsp:include page="views/logout-view.jsp"/>
-        <jsp:include page="views/jtreeView.jsp"/>
-        <jsp:include page="views/add-file-view.jsp"/>
+        <div id="left" class="big_div">
+            <h2>MarkESI - Correction</h2>
+            <div class="padding">
+                <jsp:include page="views/logout-view.jsp"/>
+                <hr/>
+                <jsp:include page="views/jtreeView.jsp"/>
+                <hr/>
+                <jsp:include page="views/add-file-view.jsp"/>
+            </div>
+        </div>
         <% if (request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
-        %> 
-        <jsp:include page = "views/file-view.jsp" /> 
-        <jsp:include page = "views/annotation-view.jsp" />
-        <jsp:include page = "views/add-annotation-view.jsp" />
-        <%            }
-        } else {%>
+        %>
+        <div id="center">
+            <jsp:include page = "views/file-view.jsp" />
+        </div>
+        <div id="right">
+            <jsp:include page = "views/annotation-view.jsp" />
+            <jsp:include page = "views/add-annotation-view.jsp" />
+        </div>
+        <% }
+        } else if (isSigningUp != null && isSigningUp == true) {%>
+        <jsp:include page = "views/signup-view.jsp" />
+        <% } else {%>
         <jsp:include page = "views/user-connexion-view.jsp" />
         <%}%>
     </body>

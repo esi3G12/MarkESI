@@ -1,7 +1,7 @@
-        <script src="js/easingPlg.js"></script>
-        <script src="js/jqueryFileTree.js"></script>
-        <script src="js/jtree.js"></script>
-        <link type="text/css" rel="stylesheet" href="css/jqueryFileTree.css"/>
+<script src="js/easingPlg.js"></script>
+<script src="js/jqueryFileTree.js"></script>
+<script src="js/jtree.js"></script>
+<link type="text/css" rel="stylesheet" href="css/jqueryFileTree.css"/>
 
 <div id="tree"></div>
 <script type="text/javascript">

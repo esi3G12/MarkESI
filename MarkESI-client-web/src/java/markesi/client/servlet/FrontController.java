@@ -56,8 +56,8 @@ public class FrontController extends HttpServlet {
             throws ServletException, IOException {
 
         String page = "WEB-INF/index.jsp";
-        // vérifier connection
-        boolean connected = subFileManager.getUser() != null;//checkConnect();
+
+        boolean connected = subFileManager.getUser() != null;
         request.setAttribute("connected", connected);
         try {
             String action = request.getParameter("action");
@@ -72,7 +72,7 @@ public class FrontController extends HttpServlet {
                         request.setAttribute("files", list);
                         page = "js/connectors/jqueryFileTree.jsp";
                     } else if (action.equals("signup")) {
-                        page = "WEB-INF/views/signup-view.jsp";
+                        request.setAttribute("isSigningUp", true);
                     } else if (action.equals("adduser")) {
                         addUser(request, response);
                     } else if (action.equals("deco")) {
