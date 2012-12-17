@@ -169,7 +169,11 @@ public class SubFileManager implements SubFileManagerRemote {
         if (username == null || username.isEmpty() || passwd == null || passwd.isEmpty()) {
             throw new MarkESIException("le username ou le password est invalide");
         }
-        user = userEJB.login(username, passwd);
+        try {
+            user = userEJB.login(username, passwd);
+        } catch (Exception e) {
+            throw new MarkESIException(e.getMessage());
+        }
     }
 
     @Override

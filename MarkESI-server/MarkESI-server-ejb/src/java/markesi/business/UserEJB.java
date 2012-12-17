@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import markesi.entity.Submission;
@@ -19,7 +19,7 @@ import markesi.exceptions.MarkESIException;
  *
  * @author LSV
  */
-@Stateful
+@Stateless
 public class UserEJB {
 
     @PersistenceContext(unitName = "MarkESI-PU")
