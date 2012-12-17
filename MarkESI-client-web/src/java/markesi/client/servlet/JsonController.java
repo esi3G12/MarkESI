@@ -31,7 +31,7 @@ public class JsonController extends HttpServlet {
 
     @EJB
     private SubFileManagerRemote subFileManager;
-    
+
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -124,7 +124,6 @@ public class JsonController extends HttpServlet {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("annotations", addAnnotations(fileId));
-
                 } catch (JSONException ex) {
                     Logger.getLogger(JsonController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -138,44 +137,39 @@ public class JsonController extends HttpServlet {
     private JSONArray addAnnotations(String fileId) throws JSONException {
         Collection<Annotation> annots = subFileManager.getAnnotations(Long.parseLong(fileId));
         JSONArray jsonAnnots = new JSONArray();
-        
+
         for (Annotation annot : annots) {
             Collection<JSONObject> sels = new ArrayList<JSONObject>();
-            
+
             for (Interval interval : annot.getIntervalCollection()) {
-                JSONObject sel = jsonSelection(interval.getBegin(), interval.getEnd(), 
+                JSONObject sel = jsonSelection(interval.getBegin(), interval.getEnd(),
                         interval.getEnd() - interval.getBegin());
                 sels.add(sel);
             }
-            
+
             jsonAnnots.put(jsonAnnotation(annot.getText(), annot.getDate().toString(), sels));
         }
 
         return jsonAnnots;
     }
 
-    private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setCharacterEncoding("UTF-8");
-        String selectionsStr = request.getParameter("selections");
-        
-        System.out.println("post !");
-        
-        if (selectionsStr == null || selectionsStr.equals("")) {
-            response.getWriter().write("error");
-            return;
+    private void postJSON(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String selectionsStr = request.getParameter("json");
+
+        if (selectionsStr != null && !selectionsStr.equals("")) {
+
+            // enlève les [] au début et à la fin :
+            //selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
+            selectionsStr = "\"selections\":" + selectionsStr;
+            try {
+                JSONObject selections = new JSONObject(selectionsStr);
+                createAnnotation(selections);
+            } catch (JSONException ex) {
+                ;
+            }
         }
         
-        System.out.println("pas d'erreur");
-        
-        // enlève les [] au début et à la fin :
-        selectionsStr = selectionsStr.substring(1, selectionsStr.length() - 1);
-        try {
-            JSONObject selections = new JSONObject(selectionsStr);
-            createAnnotation(selections);
-            response.getWriter().write("success");
-        } catch (JSONException ex) {
-            response.getWriter().write("error");
-        }
+        request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
     }
 
     private void createAnnotation(JSONObject selections) {
@@ -184,8 +178,8 @@ public class JsonController extends HttpServlet {
             JSONArray a = selections.getJSONArray("selections");
             for (int i = 0; i < a.length(); i++) {
                 Interval interval = new Interval();
-                interval.setBegin(((JSONObject)a.get(i)).getInt("start"));
-                interval.setEnd(((JSONObject)a.get(i)).getInt("end"));
+                interval.setBegin(((JSONObject) a.get(i)).getInt("start"));
+                interval.setEnd(((JSONObject) a.get(i)).getInt("end"));
                 list.add(interval);
             }
             subFileManager.addAnnotation(new Long(0), selections.getString("text"), list);

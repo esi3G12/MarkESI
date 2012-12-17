@@ -17,21 +17,20 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript">
             <%@include file="js/lib/jquery-pp.js"%>
-        </script>
-        <script type="text/javascript">
             <%@include file="js/lib/selection.js"%>
         </script>
     </head>
     <body>
-	<jsp:include page="views/logout-view.jsp"/>
+        <jsp:include page="views/logout-view.jsp"/>
         <jsp:include page="views/jtreeView.jsp"/>
         <jsp:include page="views/add-file-view.jsp"/>
-        <% if ( request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
+        <% if (request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
         %> 
         <jsp:include page = "views/file-view.jsp" /> 
         <jsp:include page = "views/annotation-view.jsp" />
-            <%            }
-            %>
+        <jsp:include page = "views/add-annotation-view.jsp" />
+        <%            }
+        %>
 
-        </body>
+    </body>
 </html>

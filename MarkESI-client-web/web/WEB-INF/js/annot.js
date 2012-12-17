@@ -1,14 +1,14 @@
 $(document).ready(function() {
     var annotations_div = $('#annotations');
     var text_div = $('#code #content');
-    
+        
     function highlight (annot)
     {
         var to_replace = $('#content');
-        to_replace.text(to_replace.text());
+        to_replace.html(to_replace.text());
         for (var i = 0; i < annot.selections.length; i++) {
             var sel = annot.selections[i];
-            addClass(0, i, sel, 'cur_sel');
+            addClass(i, sel, 'cur_sel');
         }
     }
     
@@ -28,7 +28,9 @@ $(document).ready(function() {
         
         div += '</div></div>';
         div = $(div);
-        div.click(function(){highlight(annot)});
+        div.click(function(){
+            highlight(annot)
+            });
         annotations_div.append(div);
     }  
     

@@ -39,6 +39,8 @@ public class FrontController extends HttpServlet {
 
     @EJB
     private SubFileManagerRemote subFileManager;
+    
+    public static String lastURL = null;
 
     /**
      * Processes requests for both HTTP
@@ -52,8 +54,10 @@ public class FrontController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-
+        
+        lastURL = request.getRequestURI();
+        lastURL += ((request.getQueryString()==null)? "" : "?" + request.getQueryString().toString());
+        
         String page = "WEB-INF/index.jsp";
         // vérifier connection
         boolean connected = true;//checkConnect();

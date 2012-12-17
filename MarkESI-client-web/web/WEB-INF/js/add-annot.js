@@ -137,7 +137,7 @@ $(document).ready(function() {
         }
 
         //ajout de l'annotation via le FrontController
-        $("#json").text(JSON.stringify(selections));
+        $("#json").val(JSON.stringify(selections));
         $("#sel_form").submit();
     }
 

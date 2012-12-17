@@ -1,4 +1,3 @@
- <script src="js/jquery.js"></script>
         <script src="js/easingPlg.js"></script>
         <script src="js/jqueryFileTree.js"></script>
         <script src="js/jtree.js"></script>
@@ -7,7 +6,7 @@
 <div id="tree"></div>
 <script type="text/javascript">
     $(document).ready( function() {
-        $('#tree').fileTree({ root: 'C:\\UserLocal\\submissions' , script: '?action=viewTree'}, function(file) {
+        $('#tree').fileTree({ root: 'C:\\UserLocal\\submissions' , script: '?action=viewTree', expandSpeed: -1}, function(file) {
             //console.log(file);
             window.location = "?action=viewFile&fileId="+file;
         });
