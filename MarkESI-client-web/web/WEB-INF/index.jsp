@@ -23,15 +23,18 @@
         </script>
     </head>
     <body>
-	<jsp:include page="views/logout-view.jsp"/>
+        <% if ((Boolean) request.getAttribute("connected") == true) {
+        %>
+        <jsp:include page="views/logout-view.jsp"/>
         <jsp:include page="views/jtreeView.jsp"/>
         <jsp:include page="views/add-file-view.jsp"/>
-        <% if ( request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
+        <% if (request.getParameter("action") != null && request.getParameter("action").equals("viewFile")) {
         %> 
         <jsp:include page = "views/file-view.jsp" /> 
         <jsp:include page = "views/annotation-view.jsp" />
-            <%            }
-            %>
-
-        </body>
+        <%            }
+        } else {%>
+        <jsp:include page = "views/user-connexion-view.jsp" />
+        <%}%>
+    </body>
 </html>

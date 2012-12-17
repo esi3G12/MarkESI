@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import markesi.business.AnnotationEJB;
 import markesi.business.IntervalEJB;
 import markesi.business.SubFileEJB;
@@ -27,7 +27,7 @@ import markesi.exceptions.MarkESIException;
  *
  * @author G35309
  */
-@Stateless
+@Stateful
 public class SubFileManager implements SubFileManagerRemote {
 
     @EJB
@@ -152,7 +152,10 @@ public class SubFileManager implements SubFileManagerRemote {
     }
     
     @Override
-    public void login(String username, String passwd){
+    public void login(String username, String passwd) throws MarkESIException {
+        if (username == null || username.isEmpty() || passwd == null || passwd.isEmpty()){
+            throw new MarkESIException("le username ou le password est invalide");
+        }
         user = userEJB.login(username, passwd);
     }
     
@@ -161,9 +164,21 @@ public class SubFileManager implements SubFileManagerRemote {
         return user;
     }
     
-    @Override
-    public void inscrire(String email, String username, String password, String nom, String prenom){
-        user = userEJB.ajouter(email, username, password, nom, prenom);
+     @Override
+    public void inscrire(String email, String username, String password, String nom, String prenom)
+                                                      throws MarkESIException{
+        if (username == null || username.isEmpty() || password == null || password.isEmpty() 
+                || email == null || email.isEmpty() || nom == null || nom.isEmpty() 
+                || prenom == null || prenom.isEmpty() ) {
+            throw new MarkESIException ("le username, le password, l'email, "
+                    + "le nom ou/et le prénom est null ou vide");
+        }
+        userEJB.ajouter(email, username, password, nom, prenom);
     }    
+
+    @Override
+    public void logout() {
+        this.user=null;
+    }
     
 }
