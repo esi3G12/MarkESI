@@ -4,7 +4,6 @@
  */
 package markesi.test;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;

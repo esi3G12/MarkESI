@@ -71,46 +71,6 @@ public class AnnotationEJBTest {
         assertEquals(annotationReturned, annotationEJB.findById(annotationReturned.getId()));
     }
 
-    /*@Test
-    public void addAnnotationWithIntervals() {
-        Collection<Interval> intervals = new ArrayList<Interval>();
-        Interval inter =intervalEJB.create(1,5);
-        Interval inter2 = intervalEJB.create(9,15);
-        intervals.add(inter);
-        intervals.add(inter2);
-
-        //Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
-        //on a bien une collection de taille2
-        assertEquals(2, annotationReturned.getIntervalCollection().size());
-    }
-
-    @Test
-    public void addAnnotationWithIntervals2() {
-        Annotation annotationReturned = annotationEJB.create("test");
-        Collection<Interval> intervals = new ArrayList<Interval>();
-        Interval inter = new Interval();
-        Interval inter2 = new Interval();
-        inter.setBegin(1);
-        inter.setEnd(5);
-        inter2.setBegin(9);
-        inter2.setEnd(15);
-        intervals.add(inter);
-        intervals.add(inter2);
-
-        int i = 0;
-        //TODO finir test sur annotation
-        //Annotation annotationReturned = annotationEJB.createWithIntervals("test", intervals);
-        for (Interval interval : annotationReturned.getIntervalCollection()) {
-            if (interval.getBegin() == inter.getBegin() && interval.getEnd() == inter.getEnd()) {
-                i++;
-            }
-            //les intervals ont bien Ã©tÃ© sauvÃ© (ID!=0)
-            assertFalse(interval.getId() == 0);
-        }
-        //on a bien un seul interval égal à inter (pas deux)
-        assertEquals(1, i);
-    }*/
-
     @Test
     public void testDelete() {
 

@@ -96,17 +96,10 @@ public class SubFileEJBTest {
             SubFile subFile2 = subFileEJB.add(input, "testFile.java", "C:\\UserLocal\\");
 
             assertNotNull(subFile.getFileName());
-            System.out.println("\n\n\n\n\n\n\n\n\n" + subFile.getFileName());
             os.close();
             Annotation annotationReturned = AnnotationEJB.create("test");
 
-            System.out.println("id subfile 1: " + subFile.getId());
-            System.out.println("id subfile 2: " + subFile2.getId());
-
-            System.out.println("id annotation: " + annotationReturned.getId());
-
             subFileEJB.addAnnotation(subFile2, annotationReturned);
-            System.out.println("annotation ajoutee" + "\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
             //on doit réattacher le tout... 
             subFile2 = subFileEJB.getSubFileById(subFile2.getId());

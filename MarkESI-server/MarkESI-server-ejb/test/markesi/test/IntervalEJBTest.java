@@ -10,14 +10,13 @@ import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 import markesi.business.AnnotationEJB;
 import markesi.business.IntervalEJB;
-import markesi.entity.Annotation;
 import markesi.entity.Interval;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

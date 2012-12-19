@@ -108,16 +108,6 @@ public class SubFileManagerTest {
         Submission result = subfileManager.addSubmission(name);
     }
 
-//    @Test
-//    public void testAddSubFileToSubmission() throws MarkESIException {
-//        String subName = "submission_test";                
-//        Submission result = subfileManager.addSubmission(subName);
-//        String fileName = "test.java";
-//        subfileManager.addSubFileToSubmission("content for test", fileName, result);
-//        result = subfileManager.getSubmissionById(result.getId());
-//        ((List)result.getSubFiles()).size();
-//        assertNotNull(((List)result.getSubFiles()).get(0));
-//    }
     @Test(expected = MarkESIException.class)
     public void testAddSubFileToSubmissionWithNullName() throws MarkESIException {
         String subName = "submission_test";
